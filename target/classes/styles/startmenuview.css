@@ -1,0 +1,15 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.backgroundMain{
+    -fx-background-image: url("../images/a.png");
+    -fx-background-size: 100% 100%;
+    -fx-opacity: 0.98;
+}
+
+.character1{
+    -fx-background-image: url("../images/c.png");
+    -fx-background-size: 100% 100%;
+    -fx-opacity: 0.98;
+}
