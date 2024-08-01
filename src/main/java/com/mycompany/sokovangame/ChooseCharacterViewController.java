@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.sokovangame;
 
 import java.io.IOException;
@@ -11,10 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
 /**
  * FXML Controller class
@@ -24,70 +18,56 @@ import javafx.stage.Stage;
 public class ChooseCharacterViewController implements Initializable {
     private String playerName;
     private String itemName;
+    private StartMenuViewController startMenuController;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
-     @FXML
+    public void initData(String playerName, String itemName, StartMenuViewController startMenuController) {
+        this.playerName = playerName;
+        this.itemName = itemName;
+        this.startMenuController = startMenuController;
+    }
+
+    @FXML
     private void SteveButton(ActionEvent event) {
-        switchToStartMenu("Steve", 1, event);
+        switchToStartMenu("Steve", 1);
     }
 
     @FXML
     private void AlexButton(ActionEvent event) {
-        switchToStartMenu("Alex", 2, event);
+        switchToStartMenu("Alex", 2);
     }
 
     @FXML
     private void CreeperButton(ActionEvent event) {
-        switchToStartMenu("Creeper", 3, event);
+        switchToStartMenu("Creeper", 3);
     }
 
     @FXML
     private void EnderManButton(ActionEvent event) {
-        switchToStartMenu("EnderMan", 4, event);
+        switchToStartMenu("EnderMan", 4);
     }
 
     @FXML
     private void AldeanoButton(ActionEvent event) {
-        switchToStartMenu("Aldeano", 5, event);
+        switchToStartMenu("Esqueleto", 5);
     }
 
     @FXML
     private void ZombieButton(ActionEvent event) {
-        switchToStartMenu("Zombie", 6, event);
+        switchToStartMenu("Zombie", 6);
     }
 
-    public void initData(String playerName, String itemName) {
-    this.playerName = playerName;
-    this.itemName = itemName;
-}
+    private void switchToStartMenu(String characterName, int characterNumber) {
+        // Establecer el personaje seleccionado y regresar al menú de inicio
+        startMenuController.setCharacter(characterName, characterNumber);
+        startMenuController.setPlayerName(playerName);
+        startMenuController.setItemName(itemName);
 
-private void switchToStartMenu(String characterName, int characterNumber, ActionEvent event) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
-        Parent root = loader.load();
-
-        StartMenuViewController controller = loader.getController();
-        controller.setCharacter(characterName, characterNumber);
-        controller.setPlayerName(playerName); // Pasa el nombre del jugador
-        controller.setItemName(itemName); // Pasa el nombre del item
-
-        Scene scene = new Scene(root, 840, 640);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
+        // Volver al menú de inicio (esto depende de cómo hayas implementado tu navegación)
+        startMenuController.showStartMenu();
     }
-}
-
-
-
-    
 }
