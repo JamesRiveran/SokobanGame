@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../../styles/choosecharacterview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.ChooseCharacterViewController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="backgroundMain" stylesheets="@../../../styles/choosecharacterview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.ChooseCharacterViewController">
    <children>
       <VBox layoutX="164.0" layoutY="91.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label text="Choose your character">
+                  <Label styleClass="Button2" text="Choose your character">
                      <font>
                         <Font name="Yu Gothic Light" size="38.0" />
                      </font>
@@ -29,7 +29,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#SteveButton" prefHeight="78.0" prefWidth="80.0" styleClass="character1" VBox.vgrow="ALWAYS" />
-                                    <Label text="Steve" />
+                                    <Label styleClass="Button3" text="Steve" />
                                  </children>
                               </VBox>
                            </children>
@@ -39,7 +39,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#AlexButton" prefHeight="78.0" prefWidth="80.0" styleClass="character2" VBox.vgrow="ALWAYS" />
-                                    <Label text="Alex" />
+                                    <Label styleClass="Button3" text="Alex" />
                                  </children>
                               </VBox>
                            </children>
@@ -49,7 +49,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#CreeperButton" prefHeight="78.0" prefWidth="80.0" styleClass="character3" VBox.vgrow="ALWAYS" />
-                                    <Label text="Creeper" />
+                                    <Label styleClass="Button3" text="Creeper" />
                                  </children>
                               </VBox>
                            </children>
@@ -67,7 +67,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#EnderManButton" prefHeight="78.0" prefWidth="80.0" styleClass="character4" VBox.vgrow="ALWAYS" />
-                                    <Label text="EnderMan" />
+                                    <Label styleClass="Button3" text="EnderMan" />
                                  </children>
                               </VBox>
                            </children>
@@ -77,7 +77,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#AldeanoButton" prefHeight="78.0" prefWidth="80.0" styleClass="character5" VBox.vgrow="ALWAYS" />
-                                    <Label text="Aldeano" />
+                                    <Label styleClass="Button3" text="Aldeano" />
                                  </children>
                               </VBox>
                            </children>
@@ -87,7 +87,7 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#ZombieButton" prefHeight="78.0" prefWidth="80.0" styleClass="character6" VBox.vgrow="ALWAYS" />
-                                    <Label text="Zombie" />
+                                    <Label styleClass="Button3" text="Zombie" />
                                  </children>
                               </VBox>
                            </children>

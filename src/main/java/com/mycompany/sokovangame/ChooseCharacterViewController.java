@@ -22,6 +22,8 @@ import javafx.stage.Stage;
  * @author Raquel
  */
 public class ChooseCharacterViewController implements Initializable {
+    private String playerName;
+    private String itemName;
 
     /**
      * Initializes the controller class.
@@ -61,18 +63,22 @@ public class ChooseCharacterViewController implements Initializable {
         switchToStartMenu("Zombie", 6, event);
     }
 
-    private void switchToStartMenu(String characterName, int characterNumber, ActionEvent event) {
+    public void initData(String playerName, String itemName) {
+    this.playerName = playerName;
+    this.itemName = itemName;
+}
+
+private void switchToStartMenu(String characterName, int characterNumber, ActionEvent event) {
     try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
         Parent root = loader.load();
 
-        // Obtener el controlador de StartMenuView
         StartMenuViewController controller = loader.getController();
         controller.setCharacter(characterName, characterNumber);
+        controller.setPlayerName(playerName); // Pasa el nombre del jugador
+        controller.setItemName(itemName); // Pasa el nombre del item
 
-        // Crear una nueva escena con tamaño específico
-        Scene scene = new Scene(root, 840, 640); // Cambia 800 y 600 por el tamaño deseado
-
+        Scene scene = new Scene(root, 840, 640);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();

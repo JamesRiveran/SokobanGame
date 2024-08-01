@@ -2,7 +2,7 @@
  * Empty Stylesheet file.
  */
 .backgroundMain{
-    -fx-background-image: url("../images/f.png");
+    -fx-background-image: url("../images/l.jpeg");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
 }
@@ -40,4 +40,22 @@
     -fx-background-image: url("../images/zombie.png");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
+}
+
+.Button2 {
+    
+    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-font-size: 42px; /* Tamaño de la fuente específico para Button2 */
+    -fx-background-insets: 0, 0, 2;
+    -fx-border-radius: 50%; /* Bordes redondeados */
+    -fx-font-family: "Yu Gothic"; /* Cambia a la fuente deseada */
+}
+
+.Button3 {
+    -fx-background-color: transparent; /* Color de fondo específico para Button2 */
+    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-font-size: 17px; /* Tamaño de la fuente específico para Button2 */
+    -fx-background-insets: 0, 0, 2;
+    -fx-border-radius: 50%; /* Bordes redondeados */
+    -fx-font-family: "Yu Gothic"; /* Cambia a la fuente deseada */
 }
