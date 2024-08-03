@@ -1,5 +1,6 @@
 package com.mycompany.sokovangame;
 
+import com.mycompany.sokovangame.StartMenuViewController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,7 +20,7 @@ public class ChooseCharacterViewController implements Initializable {
     private String playerName;
     private String itemName;
     private StartMenuViewController startMenuController;
-
+    private GameController gameControler;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -33,32 +34,32 @@ public class ChooseCharacterViewController implements Initializable {
 
     @FXML
     private void SteveButton(ActionEvent event) {
-        switchToStartMenu("Steve", 1);
+        switchToStartMenu("Steve", 5);
     }
 
     @FXML
     private void AlexButton(ActionEvent event) {
-        switchToStartMenu("Alex", 2);
+        switchToStartMenu("Alex", 6);
     }
 
     @FXML
     private void CreeperButton(ActionEvent event) {
-        switchToStartMenu("Creeper", 3);
+        switchToStartMenu("Creeper", 7);
     }
 
     @FXML
     private void EnderManButton(ActionEvent event) {
-        switchToStartMenu("EnderMan", 4);
+        switchToStartMenu("EnderMan", 8);
     }
 
     @FXML
     private void AldeanoButton(ActionEvent event) {
-        switchToStartMenu("Esqueleto", 5);
+        switchToStartMenu("Esqueleto", 9);
     }
 
     @FXML
     private void ZombieButton(ActionEvent event) {
-        switchToStartMenu("Zombie", 6);
+        switchToStartMenu("Zombie", 10);
     }
 
     private void switchToStartMenu(String characterName, int characterNumber) {
@@ -66,8 +67,6 @@ public class ChooseCharacterViewController implements Initializable {
         startMenuController.setCharacter(characterName, characterNumber);
         startMenuController.setPlayerName(playerName);
         startMenuController.setItemName(itemName);
-
-        // Volver al menú de inicio (esto depende de cómo hayas implementado tu navegación)
         startMenuController.showStartMenu();
     }
 }

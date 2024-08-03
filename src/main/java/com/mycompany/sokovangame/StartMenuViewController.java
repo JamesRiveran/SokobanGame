@@ -65,7 +65,7 @@ public class StartMenuViewController implements Initializable {
 
             // Agregar la vista de selección de personajes al stackPane
             stackPane.getChildren().add(chooseCharacterView);
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,52 +141,71 @@ public class StartMenuViewController implements Initializable {
     }
 
     @FXML
-private void StartGameButton(ActionEvent event) {
-    String playerName = txtPlayerName.getText();
-    String itemName = txtItemName.getText();
+    private void StartGameButton(ActionEvent event) throws IOException {
+        String playerName = txtPlayerName.getText();
+        String itemName = txtItemName.getText();
 
-    // Verificar si los campos de texto están llenos y si un personaje ha sido seleccionado
-    if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0) {
-        // Mostrar advertencia al usuario
-        showAlert("Make sure you fill in the required spaces.");
-    } else {
-        // Lógica para iniciar el juego si todos los campos están llenos y un personaje está seleccionado
-        System.out.println("Iniciando juego con: ");
-        System.out.println("Nombre del jugador: " + playerName);
-        System.out.println("Nombre de la partida: " + itemName);
-        System.out.println("Número del personaje: " + characterNumber);
-        // Aquí iría el código para iniciar el juego
+        // Verificar si los campos de texto están llenos y si un personaje ha sido seleccionado
+        if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0) {
+            // Mostrar advertencia al usuario
+            showAlert("Make sure you fill in the required spaces.");
+        } else {
+            // Lógica para iniciar el juego si todos los campos están llenos y un personaje está seleccionado
+            System.out.println("Iniciando juego con: ");
+            System.out.println("Nombre del jugador: " + playerName);
+            System.out.println("Nombre de la partida: " + itemName);
+            System.out.println("Número del personaje: " + characterNumber);
+
+            // Cargar la vista del juego en un nuevo Stage
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            Parent gameView = loader.load();
+
+            // Obtener el controlador de la vista del juego
+            GameController controller = loader.getController();
+            controller.setCharacterNumber(characterNumber); // Pasar el número del personaje
+
+            // Crear un nuevo Stage para la vista del juego
+            Stage gameStage = new Stage();
+            gameStage.setTitle("Juego");
+            gameStage.setScene(new Scene(gameView, 800, 600)); // Tamaño preferido (ancho, alto)
+            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            gameStage.setResizable(true);
+            gameStage.initModality(Modality.NONE); // Permite que la ventana principal esté activa mientras se muestra la ventana del juego
+            gameStage.show();
+
+            // Cerrar la ventana actual (menú)
+            Stage currentStage = (Stage) txtPlayerName.getScene().getWindow();
+            currentStage.close();
+        }
     }
-}
 
-private void showAlert(String message) {
-    try {
-        // Cargar el archivo FXML para la ventana de advertencia
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
-        Parent root = loader.load();
+    private void showAlert(String message) {
+        try {
+            // Cargar el archivo FXML para la ventana de advertencia
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
+            Parent root = loader.load();
 
-        // Obtener el controlador de la ventana de advertencia
-        AlertDialogController controller = loader.getController();
-        controller.setMessage(message); // Pasar el mensaje de advertencia
+            // Obtener el controlador de la ventana de advertencia
+            AlertDialogController controller = loader.getController();
+            controller.setMessage(message); // Pasar el mensaje de advertencia
 
-        // Crear una nueva ventana (Stage) para la advertencia
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("MESSAGE");
-        stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-        stage.setResizable(false);
-        stage.initModality(Modality.APPLICATION_MODAL); // Bloquea la ventana principal
-        stage.showAndWait(); // Espera a que la ventana de advertencia se cierre
-    } catch (IOException e) {
-        e.printStackTrace();
+            // Crear una nueva ventana (Stage) para la advertencia
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("MESSAGE");
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL); // Bloquea la ventana principal
+            stage.showAndWait(); // Espera a que la ventana de advertencia se cierre
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
+
     @FXML
     private void AboutButton(ActionEvent event) {
         // Manejar evento del botón "Acerca de"
     }
-
-
 
     public void setPlayerName(String playerName) {
         this.txtPlayerName.setText(playerName);
