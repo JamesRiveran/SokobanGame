@@ -26,13 +26,26 @@ import javafx.scene.layout.GridPane;
  *
  * @author marco
  */
-public class GameController implements Initializable {
 
+// 1. caja
+// 2. meta
+// 3. muro
+// 4. caja en meta
+// 5. steve
+// 6. alex
+// 7. creeper
+// 8. enderman
+// 9. esqueleto
+// 10. zombie
+public class GameController implements Initializable {
+    private int characterNumber;
+    
     @FXML
     private GridPane BoardGame;
     private int playerPosX = 7;
     private int playerPosY = 0;
     Square[][] gameMatrix = new Square[10][10];
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -43,10 +56,14 @@ public class GameController implements Initializable {
                 BoardGame.add(gameMatrix[i][j].getButtonSquare(), j, i);
             }
         }
-        updatePlayerPosition();
+        
+        
         setupControls();
     }
-
+    public void setCharacterNumber(int characterNumber) {
+        this.characterNumber = characterNumber;
+            updatePlayerPosition();
+    }
     public void setupControls() {
         BoardGame.setOnKeyPressed(event -> {
             keyControls(event);
@@ -54,12 +71,12 @@ public class GameController implements Initializable {
     }
 
     public void updatePlayerPosition() {
-        gameMatrix[playerPosX][playerPosY].setType(1);
+        gameMatrix[playerPosX][playerPosY].setType(characterNumber);
     }
 
     public void setPlayerPosition(int x, int y) {
-        if (isValidPosition(x,y)) {
-            gameMatrix[playerPosX][playerPosY].setType(0);
+        if (isValidPosition(x, y)) {
+            gameMatrix[playerPosX][playerPosY].setType(characterNumber);
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();

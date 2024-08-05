@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="626.0" stylesheets="@../../../styles/aboutUs.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="624.0">
+         <center>
+            <StackPane prefHeight="237.0" prefWidth="596.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="179.0" prefWidth="646.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="217.0" prefWidth="318.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-header" text="Main features:" wrappingWidth="248.98089599609375">
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="list-item" text="● 5 challenging levels" wrappingWidth="248.98089599609375" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="list-item" text="● Save and load game system" wrappingWidth="248.98089599609375">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="list-item" text="● Solution replay using STL vector" wrappingWidth="248.98089599609375">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="140.0" prefWidth="306.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="list-item" text="● Board implemented with linked lists simulating a 2D grid" wrappingWidth="286.1809051036835">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="list-item" text="● Box counting system using STL stack" wrappingWidth="284.98089599609375">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                           </children>
+                           <HBox.margin>
+                              <Insets top="30.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets top="20.0" />
+                     </StackPane.margin>
+                  </HBox>
+               </children>
+            </StackPane>
+         </center>
+         <top>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="624.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Welcome to Sokoban Java Edition" wrappingWidth="612.875">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="subtitle" text="Version 1.0 (2024)" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-description" text="Developed as an advanced programming project, this game is an implementation of the classic Sokoban puzzle, originally created in 1981 by Hiroyuki Imabayashi." textAlignment="JUSTIFY" wrappingWidth="601.0984206199646">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Text>
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <HBox prefHeight="134.0" prefWidth="718.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="163.0" prefWidth="371.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="Thank you for playing our version of Sokoban!">
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="To report bugs or send feedback:" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="james.rivera.nunez@gmail.com" />
+                     </children>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="163.0" prefWidth="246.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-description" text="Developed by:">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="James Rivera Núñez" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="Marco Fallas Umaña" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="Raquel Vargas Arias" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </children>
+</StackPane>

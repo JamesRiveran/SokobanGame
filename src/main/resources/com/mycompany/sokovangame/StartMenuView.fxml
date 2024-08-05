@@ -13,7 +13,7 @@
    <left>
       <VBox alignment="CENTER" prefHeight="327.0" prefWidth="147.0" style="-fx-background-color: #98FB98;" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="Button3" text="Item Name">
+            <Label styleClass="Button3" text="Game Name">
                <VBox.margin>
                   <Insets top="21.0" />
                </VBox.margin></Label>

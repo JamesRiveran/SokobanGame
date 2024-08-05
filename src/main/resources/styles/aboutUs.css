@@ -1,0 +1,55 @@
+.root {
+    -fx-background-image: url("../images/i.jpeg");
+    -fx-background-size: 100% 100%;
+    -fx-opacity: 0.98;
+    -fx-font-family: 'Minecraft', 'Arial', sans-serif;
+}
+
+.title {
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-fill: #54FC54;
+}
+
+.subtitle {
+    -fx-font-size: 24px;
+    -fx-fill: #FFFFFF;
+}
+
+.section-header {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-fill: #54FC54;
+}
+
+.section-description {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #AAAAAA;
+}
+
+.content {
+    -fx-font-size: 18px;
+    -fx-fill: #FFFFFF;
+}
+
+.list-item {
+    -fx-font-size: 16px;
+    -fx-fill: #55FFFF;
+}
+
+.developer-name {
+    -fx-font-size: 16px;
+    -fx-fill: #FF5555;
+}
+
+.thank-you {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-fill: #54FC54;
+}
+
+.contact {
+    -fx-font-size: 16px;
+    -fx-fill: #FF5555;
+}

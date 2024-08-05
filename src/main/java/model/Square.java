@@ -50,8 +50,21 @@ public class Square {
     }
 
     public void setType(int type) {
-        buttonSquare.setBackground(new Background(new BackgroundImage(new Image("/imagesGame/" + type + ".png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
         this.type = type;
+        String imagePath = "/imagesGame/" + type + ".png";
+        System.out.println("Setting image with path xxxxxx: " + imagePath); // Depuración
+        try {
+            Image image = new Image(imagePath);
+            buttonSquare.setBackground(new Background(new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
+            )));
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage()); // Depuración
+        }
     }
 
 }
