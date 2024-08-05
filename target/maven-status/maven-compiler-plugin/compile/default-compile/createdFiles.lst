@@ -1,2 +1,8 @@
-com\mycompany\sokovangame\App.class
+com\mycompany\sokovangame\StartMenuViewController.class
 module-info.class
+model\Square.class
+com\mycompany\sokovangame\ChooseCharacterViewController.class
+com\mycompany\sokovangame\App.class
+com\mycompany\sokovangame\GameController$1.class
+com\mycompany\sokovangame\GameController.class
+com\mycompany\sokovangame\AlertDialogController.class
