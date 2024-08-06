@@ -205,13 +205,11 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private void AboutButton(ActionEvent event) {
         try {
+            showStartMenu();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AboutUs.fxml"));
             Parent aboutUsView = loader.load();
-
-            StackPane aboutUsStackPane = new StackPane(aboutUsView);
-            aboutUsStackPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
-
-            stackPane.getChildren().add(aboutUsStackPane);
+            aboutUsView.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
+            stackPane.getChildren().add(aboutUsView);
         } catch (IOException e) {
             e.printStackTrace();
         }

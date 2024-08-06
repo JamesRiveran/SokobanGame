@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import javafx.scene.control.Button;
@@ -12,34 +8,32 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 
-/**
- *
- * @author marco
- */
 public class Square {
-
-    Button buttonSquare;
-    int type;
+    private Button buttonSquare;
+    private int type;
 
     public Square(int type) {
-        buttonSquare=setButtonConfigs(buttonSquare, type);
         this.type = type;
-
+        this.buttonSquare = new Button();
+        updateButtonVisuals();
     }
 
-    public Button setButtonConfigs(Button btnAux, int numType) {
-        btnAux = new Button();
-        //btnAux.setBackground(new Background(new BackgroundImage(new Image("/imagesGame/" + numType + ".png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
-        btnAux.setBackground(Background.EMPTY);
-        btnAux.setPrefWidth(Double.MAX_VALUE);
-        btnAux.setPrefHeight(Double.MAX_VALUE);
-        btnAux.setText("x: "+type);
-        return btnAux;
+    private void updateButtonVisuals() {
+        String imagePath = "/imagesGame/" + type + ".png";
+        try {
+            Image image = new Image(imagePath);
+            buttonSquare.setBackground(new Background(new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(50, 50, false, false, true, false)
+            )));
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage()); // Depuración
+        }
+        buttonSquare.setPrefSize(50, 50);
     }
-    
-//    public void setSquareImage(int ){
-//    
-//    }
 
     public Button getButtonSquare() {
         return buttonSquare;
@@ -51,20 +45,6 @@ public class Square {
 
     public void setType(int type) {
         this.type = type;
-        String imagePath = "/imagesGame/" + type + ".png";
-        System.out.println("Setting image with path xxxxxx: " + imagePath); // Depuración
-        try {
-            Image image = new Image(imagePath);
-            buttonSquare.setBackground(new Background(new BackgroundImage(
-                image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
-            )));
-        } catch (Exception e) {
-            System.out.println("Error loading image: " + e.getMessage()); // Depuración
-        }
+        updateButtonVisuals();
     }
-
 }

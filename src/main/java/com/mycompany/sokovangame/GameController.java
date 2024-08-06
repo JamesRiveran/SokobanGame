@@ -1,73 +1,95 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.sokovangame;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import model.Square;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import static javafx.scene.input.KeyCode.S;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 
 /**
  * FXML Controller class
- *
- * @author marco
+ * 
+ * Author marco
  */
 
-// 1. caja
-// 2. meta
-// 3. muro
-// 4. caja en meta
-// 5. steve
-// 6. alex
-// 7. creeper
-// 8. enderman
-// 9. esqueleto
-// 10. zombie
 public class GameController implements Initializable {
-    private int characterNumber;
-    
+    private int characterNumber = 5;
+    private int playerPosX;
+    private int playerPosY;
+    private Map<Character, Integer> typeMap;
+
     @FXML
     private GridPane BoardGame;
-    private int playerPosX = 7;
-    private int playerPosY = 0;
+
     Square[][] gameMatrix = new Square[10][10];
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        for (int i = 0; i <= 9; i++) {
-            for (int j = 0; j <= 9; j++) {
-                gameMatrix[i][j] = new Square(0);
-                BoardGame.add(gameMatrix[i][j].getButtonSquare(), j, i);
-            }
+        initializeTypeMap();
+        try {
+            loadBoard("levels/level1.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        
         setupControls();
     }
+
+    private void initializeTypeMap() {
+        typeMap = new HashMap<>();
+        typeMap.put(' ', 0); // Space - empty path
+        typeMap.put('#', 3); // Wall
+        typeMap.put('.', 4); // Place for a box
+        typeMap.put('$', 2); // Box
+        typeMap.put('!', 1); // Box in correct place
+        typeMap.put('@', 0); // Player's starting position, initially empty, replaced later
+    }
+
+    private void loadBoard(String resourcePath) throws IOException {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
+        if (is == null) {
+            throw new IOException("Resource not found: " + resourcePath);
+        }
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line;
+        int row = 0;
+
+        while ((line = reader.readLine()) != null && row < gameMatrix.length) {
+            for (int col = 0; col < line.length() && col < gameMatrix[row].length; col++) {
+                char typeChar = line.charAt(col);
+                int type = typeMap.getOrDefault(typeChar, 0);
+
+                if (typeChar == '@') {
+                    playerPosX = row;
+                    playerPosY = col;
+                    type = characterNumber;
+                }
+
+                gameMatrix[row][col] = new Square(type);
+                BoardGame.add(gameMatrix[row][col].getButtonSquare(), col, row);
+            }
+            row++;
+        }
+        reader.close();
+        updatePlayerPosition();
+    }
+
     public void setCharacterNumber(int characterNumber) {
         this.characterNumber = characterNumber;
-            updatePlayerPosition();
+        updatePlayerPosition();
     }
+
     public void setupControls() {
-        BoardGame.setOnKeyPressed(event -> {
-            keyControls(event);
-        });
+        BoardGame.setFocusTraversable(true);
+        BoardGame.setOnKeyPressed(this::keyControls);
     }
 
     public void updatePlayerPosition() {
@@ -76,18 +98,17 @@ public class GameController implements Initializable {
 
     public void setPlayerPosition(int x, int y) {
         if (isValidPosition(x, y)) {
-            gameMatrix[playerPosX][playerPosY].setType(characterNumber);
+            gameMatrix[playerPosX][playerPosY].setType(0); // Clear previous position
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
         } else {
-            //Añadir mensaje de no poder salirse del tablero
+            System.out.println("Cannot move out of bounds!");
         }
     }
 
     private boolean isValidPosition(int x, int y) {
-        boolean validMovement = x >= 0 && x < 10 && y >= 0 && y < 10;
-        return validMovement;
+        return x >= 0 && x < 10 && y >= 0 && y < 10;
     }
 
     public void keyControls(KeyEvent event) {
@@ -108,5 +129,4 @@ public class GameController implements Initializable {
                 break;
         }
     }
-
 }
