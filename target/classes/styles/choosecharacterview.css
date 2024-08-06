@@ -25,7 +25,7 @@
 }
 
 .character4{
-    -fx-background-image: url("../imagesGame/enderman.png");
+    -fx-background-image: url("../imagesGame/wolf.png");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
 }

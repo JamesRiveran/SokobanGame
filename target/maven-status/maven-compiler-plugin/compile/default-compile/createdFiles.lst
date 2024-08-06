@@ -1,7 +1,7 @@
 com\mycompany\sokovangame\StartMenuViewController.class
-module-info.class
 model\Square.class
 com\mycompany\sokovangame\ChooseCharacterViewController.class
+module-info.class
 com\mycompany\sokovangame\App.class
 com\mycompany\sokovangame\GameController$1.class
 com\mycompany\sokovangame\GameController.class

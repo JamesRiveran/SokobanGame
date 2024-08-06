@@ -48,8 +48,8 @@ public class ChooseCharacterViewController implements Initializable {
     }
 
     @FXML
-    private void EnderManButton(ActionEvent event) {
-        switchToStartMenu("EnderMan", 8);
+    private void WolfButton(ActionEvent event) {
+        switchToStartMenu("Wolf", 8);
     }
 
     @FXML

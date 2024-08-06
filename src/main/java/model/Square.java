@@ -33,7 +33,7 @@ public class Square {
         btnAux.setBackground(Background.EMPTY);
         btnAux.setPrefWidth(Double.MAX_VALUE);
         btnAux.setPrefHeight(Double.MAX_VALUE);
-        btnAux.setText("x: "+type);
+        
         return btnAux;
     }
     
@@ -52,7 +52,7 @@ public class Square {
     public void setType(int type) {
         this.type = type;
         String imagePath = "/imagesGame/" + type + ".png";
-        System.out.println("Setting image with path xxxxxx: " + imagePath); // Depuración
+       
         try {
             Image image = new Image(imagePath);
             buttonSquare.setBackground(new Background(new BackgroundImage(
