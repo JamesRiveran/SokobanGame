@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+
 <BorderPane prefHeight="500.0" prefWidth="636.0" styleClass="backgroundMain" stylesheets="@../../../styles/GameView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.GameController">
    <top>
       <VBox prefHeight="88.0" prefWidth="636.0" BorderPane.alignment="CENTER">
@@ -60,7 +61,7 @@
                            </children>
                         </VBox>
                      </children>
-                  </HBox>
+                  </HBox> 
                </children>
             </HBox>
          </children></VBox>

@@ -200,6 +200,7 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private void AboutButton(ActionEvent event) {
         try {
+            showStartMenu();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AboutUs.fxml"));
             Parent aboutUsView = loader.load();
 
@@ -215,7 +216,6 @@ public class StartMenuViewController implements Initializable {
                     stackPane.getChildren().remove(aboutUsStackPane);
                 }
             });
-
         } catch (IOException e) {
             e.printStackTrace();
         }
