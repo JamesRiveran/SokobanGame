@@ -11,13 +11,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import static javafx.scene.input.KeyCode.S;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
@@ -27,16 +23,6 @@ import javafx.scene.layout.GridPane;
  * Author marco
  */
 
-// 1. caja
-// 2. meta
-// 3. muro
-// 4. caja en meta
-// 5. steve
-// 6. alex
-// 7. creeper
-// 8. enderman
-// 9. esqueleto
-// 10. zombie
 public class GameController implements Initializable {
 
     private int characterNumber;
@@ -47,22 +33,20 @@ public class GameController implements Initializable {
     private AnimationTimer timer;
     private long lastUpdate = 0;
     private long tiempoAcumulado = 0;
-    public int cont = 0;
-    private int playerPosX;
-    private int playerPosY;
+    private int playerPosX = -1;
+    private int playerPosY = -1;
     private Map<Character, Integer> typeMap;
 
     @FXML
     private GridPane BoardGame;
 
-    Square[][] gameMatrix = new Square[10][10];
+    private Square[][] gameMatrix = new Square[10][10];
     @FXML
     private Label txtGameName;
     @FXML
     private Label txtPlayerName;
     @FXML
     private Label txtCronometer;
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,20 +60,21 @@ public class GameController implements Initializable {
         iniciar();
     }
 
-
     public void setItems(int characterNumber, String GameName, String PlayerName) {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
+        updatePlayerPosition();
+    }
 
     private void initializeTypeMap() {
         typeMap = new HashMap<>();
-        typeMap.put(' ', 0); // Space - empty path
-        typeMap.put('#', 3); // Wall
-        typeMap.put('.', 2); // Place for a box
-        typeMap.put('$', 1); // Box
-        typeMap.put('!', 4); // Box in correct place
-        typeMap.put('@', 0); // Player's starting position, initially empty, replaced later
+        typeMap.put(' ', 0); // Espacio - camino vacío
+        typeMap.put('#', 3); // Muro
+        typeMap.put('.', 2); // Lugar para una caja
+        typeMap.put('$', 1); // Caja
+        typeMap.put('!', 4); // Caja en lugar correcto
+        typeMap.put('@', 0); // Posición inicial del jugador, inicialmente vacía
     }
 
     private void loadBoard(String resourcePath) throws IOException {
@@ -135,7 +120,9 @@ public class GameController implements Initializable {
     public void updatePlayerPosition() {
         txtGameName.setText(GameName);
         txtPlayerName.setText(PlayerName);
-        gameMatrix[playerPosX][playerPosY].setType(characterNumber);
+        if (playerPosX >= 0 && playerPosY >= 0) {
+            gameMatrix[playerPosX][playerPosY].setType(characterNumber);
+        }
     }
 
     public void setPlayerPosition(int x, int y) {
@@ -154,7 +141,6 @@ public class GameController implements Initializable {
     }
 
     public void keyControls(KeyEvent event) {
-        System.out.println(event.getCode().toString());
         switch (event.getCode()) {
             case W:
                 setPlayerPosition(playerPosX - 1, playerPosY);
@@ -174,29 +160,6 @@ public class GameController implements Initializable {
         }
     }
 
-    @FXML
-    private void resetButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void undoButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void optionsButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void helpButton(ActionEvent event) {
-    }
-
-    private void reiniciar() {
-        detener();
-        iniciarTiempo = 0;
-        tiempoAcumulado = 0;
-        txtCronometer.setText("00:00:00");
-    }
-
     private void iniciar() {
         updatePlayerPosition();
         if (!corriendo && iniciarTiempo == 0) {
@@ -212,6 +175,25 @@ public class GameController implements Initializable {
         }
     }
 
+    private void reiniciar() {
+        detener();
+        iniciarTiempo = 0;
+        tiempoAcumulado = 0;
+        txtCronometer.setText("00:00:00");
+    }
+
+    private void detener() {
+        if (corriendo) {
+            corriendo = false;
+            long currentTime = System.currentTimeMillis();
+            tiempoAcumulado = currentTime - iniciarTiempo;
+            if (timer != null) {
+                timer.stop();
+                timer = null;
+            }
+        }
+    }
+
     private void reanudar() {
         if (!corriendo && iniciarTiempo != 0) {
             corriendo = true;
@@ -223,25 +205,6 @@ public class GameController implements Initializable {
                 }
             };
             timer.start();
-        }
-    }
-    int contador = 0;
-
-    private void detener() {
-        if (cont == 0) {
-            if (corriendo) {
-                corriendo = false;
-                long currentTime = System.currentTimeMillis();
-                tiempoAcumulado = (currentTime - iniciarTiempo);
-                if (timer != null) {
-                    timer.stop();
-                    timer = null;
-                }
-            }
-            cont++;
-        } else {
-            reanudar();
-            cont = 0;
         }
     }
 
@@ -260,5 +223,25 @@ public class GameController implements Initializable {
                 lastUpdate = now;
             }
         }
+    }
+
+    @FXML
+    private void resetButton(ActionEvent event) {
+        reiniciar();
+    }
+
+    @FXML
+    private void undoButton(ActionEvent event) {
+        
+    }
+
+    @FXML
+    private void optionsButton(ActionEvent event) {
+        
+    }
+
+    @FXML
+    private void helpButton(ActionEvent event) {
+        
     }
 }

@@ -18,15 +18,6 @@ public class Square {
         updateButtonVisuals();
     }
 
-    public Button setButtonConfigs(Button btnAux, int numType) {
-        btnAux = new Button();
-        //btnAux.setBackground(new Background(new BackgroundImage(new Image("/imagesGame/" + numType + ".png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
-        btnAux.setBackground(Background.EMPTY);
-        btnAux.setPrefWidth(Double.MAX_VALUE);
-        btnAux.setPrefHeight(Double.MAX_VALUE);
-        
-        return btnAux;
-
     private void updateButtonVisuals() {
         String imagePath = "/imagesGame/" + type + ".png";
         try {
@@ -41,7 +32,7 @@ public class Square {
         } catch (Exception e) {
             System.out.println("Error loading image: " + e.getMessage()); // Depuración
         }
-        buttonSquare.setPrefSize(100, 100); // Match this to your GridPane cell size
+        buttonSquare.setPrefSize(100, 100);
     }
 
     public Button getButtonSquare() {
@@ -54,20 +45,6 @@ public class Square {
 
     public void setType(int type) {
         this.type = type;
-        String imagePath = "/imagesGame/" + type + ".png";
-       
-        try {
-            Image image = new Image(imagePath);
-            buttonSquare.setBackground(new Background(new BackgroundImage(
-                image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
-            )));
-        } catch (Exception e) {
-            System.out.println("Error loading image: " + e.getMessage()); // Depuración
-        }
         updateButtonVisuals();
     }
 }

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="626.0" stylesheets="@../../../styles/aboutUs.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.AboutUsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="626.0" stylesheets="@../../../styles/aboutUs.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.AboutUsController">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="624.0" styleClass="backgroundMain">
          <center>
@@ -87,7 +87,7 @@
                               <Insets bottom="20.0" />
                            </VBox.margin>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="To report bugs or send feedback:" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="To report bugs or send feedback:" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="james.rivera.nunez@gmail.com" />
                      </children>
                      <HBox.margin>

@@ -2,7 +2,7 @@
     -fx-background-image: url("../images/i.jpeg");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
-
+}
 .title {
     -fx-font-size: 38px;
     -fx-font-weight: bold;
@@ -49,5 +49,5 @@
 
 .contact {
     -fx-font-size: 16px;
-    -fx-fill: #2E8B57; 
+    -fx-fill: #FFFFFF; 
 }
