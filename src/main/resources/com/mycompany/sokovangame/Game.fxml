@@ -8,10 +8,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.GameController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.GameController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" />
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
                   <GridPane fx:id="BoardGame" alignment="CENTER" gridLinesVisible="true" prefWidth="487.0" VBox.vgrow="ALWAYS">
@@ -40,7 +41,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <VBox.margin>
-                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                        <Insets bottom="15.0" top="15.0" />
                      </VBox.margin>
                   </GridPane>
                </children>

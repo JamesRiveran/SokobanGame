@@ -46,9 +46,9 @@ public class GameController implements Initializable {
         typeMap = new HashMap<>();
         typeMap.put(' ', 0); // Space - empty path
         typeMap.put('#', 3); // Wall
-        typeMap.put('.', 4); // Place for a box
-        typeMap.put('$', 2); // Box
-        typeMap.put('!', 1); // Box in correct place
+        typeMap.put('.', 2); // Place for a box
+        typeMap.put('$', 1); // Box
+        typeMap.put('!', 4); // Box in correct place
         typeMap.put('@', 0); // Player's starting position, initially empty, replaced later
     }
 

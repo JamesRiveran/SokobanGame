@@ -27,12 +27,12 @@ public class Square {
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
-                new BackgroundSize(50, 50, false, false, true, false)
+                new BackgroundSize(100, 100, false, false, true, false)
             )));
         } catch (Exception e) {
             System.out.println("Error loading image: " + e.getMessage()); // Depuración
         }
-        buttonSquare.setPrefSize(50, 50);
+        buttonSquare.setPrefSize(100, 100); // Match this to your GridPane cell size
     }
 
     public Button getButtonSquare() {
