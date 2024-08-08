@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import model.Square;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
@@ -46,7 +48,9 @@ public class GameController implements Initializable {
     @FXML
     private GridPane BoardGame;
 
-    private Square[][] gameMatrix = new Square[10][10];
+    //private Square[][] gameMatrix = new Square[10][10];
+    private List<List<Square>> gameMatrix = new ArrayList<>();
+    ;
     @FXML
     private Label txtGameName;
     @FXML
@@ -55,6 +59,8 @@ public class GameController implements Initializable {
     private Label txtCronometer;
     @FXML
     private Label txtLevel;
+    @FXML
+    private GridPane auxBoard;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -65,6 +71,9 @@ public class GameController implements Initializable {
             BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
         });
 
+        setItems(5, "asd", "asdasd", 1);
+        gameMatrix.get(2).get(1).getButtonSquare().setText("asdasdasd");
+        getListSquare(2, 1).getButtonSquare().setText("444444");
         iniciar();
     }
 
@@ -73,8 +82,8 @@ public class GameController implements Initializable {
         this.GameName = GameName;
         this.PlayerName = PlayerName;
         this.level = level;
-         try {
-            loadBoard("levels/level"+level+".txt");
+        try {
+            loadBoard("levels/level" + level + ".txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,8 +112,9 @@ public class GameController implements Initializable {
         String line;
         int row = 0;
 
-        while ((line = reader.readLine()) != null && row < gameMatrix.length) {
-            for (int col = 0; col < line.length() && col < gameMatrix[row].length; col++) {
+        while ((line = reader.readLine()) != null && row < 10) {
+            List<Square> rowList = new ArrayList<>();
+            for (int col = 0; col < line.length() && col < 10; col++) {
                 char typeChar = line.charAt(col);
                 int type = typeMap.getOrDefault(typeChar, 0);
 
@@ -113,14 +123,20 @@ public class GameController implements Initializable {
                     playerPosY = col;
                     type = characterNumber;
                 }
-
-                gameMatrix[row][col] = new Square(type);
-                BoardGame.add(gameMatrix[row][col].getButtonSquare(), col, row);
+                rowList.add(new Square(type));
             }
+            gameMatrix.add(rowList);
             row++;
         }
-        reader.close();
-        updatePlayerPosition();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                BoardGame.add(getListSquare(i, j).getButtonSquare(), j, i);
+            }
+        }
+    }
+
+    public Square getListSquare(int i, int j) {
+        return gameMatrix.get(i).get(j);
     }
 
     public void setCharacterNumber(int characterNumber) {
@@ -141,13 +157,13 @@ public class GameController implements Initializable {
         txtPlayerName.setText(PlayerName);
         txtLevel.setText(String.valueOf(level));
         if (playerPosX >= 0 && playerPosY >= 0) {
-            gameMatrix[playerPosX][playerPosY].setType(characterNumber);
+            getListSquare(playerPosX, playerPosY).setType(characterNumber);
         }
     }
 
     public void setPlayerPosition(int x, int y) {
         if (isValidPosition(x, y)) {
-            gameMatrix[playerPosX][playerPosY].setType(0);
+            getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
@@ -163,6 +179,7 @@ public class GameController implements Initializable {
     public void keyControls(KeyEvent event) {
         switch (event.getCode()) {
             case W:
+
                 setPlayerPosition(playerPosX - 1, playerPosY);
                 break;
             case A:
