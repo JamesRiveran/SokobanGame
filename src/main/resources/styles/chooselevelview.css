@@ -1,0 +1,30 @@
+/*
+ * Empty Stylesheet file.
+ */
+.backgroundMain{
+    -fx-background-image: url("../images/i.jpeg");
+    -fx-background-size: 100% 100%;
+    -fx-opacity: 0.98;
+}
+.character1{
+    -fx-background-image: url("../images/d.png");
+    -fx-background-size: 100% 100%;
+    -fx-opacity: 0.98;
+}
+.text1 {
+    
+    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-font-size: 42px; /* Tamaño de la fuente específico para Button2 */
+    -fx-background-insets: 0, 0, 2;
+    -fx-border-radius: 50%; /* Bordes redondeados */
+    -fx-font-family: "Yu Gothic"; /* Cambia a la fuente deseada */
+}
+
+.text2 {
+    -fx-background-color: transparent; /* Color de fondo específico para Button2 */
+    -fx-text-fill: black; /* Color del texto blanco */
+    -fx-font-size: 17px; /* Tamaño de la fuente específico para Button2 */
+    -fx-background-insets: 0, 0, 2;
+    -fx-border-radius: 50%; /* Bordes redondeados */
+    -fx-font-family: "Yu Gothic"; /* Cambia a la fuente deseada */
+}
