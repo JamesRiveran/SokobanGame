@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane prefHeight="500.0" prefWidth="636.0" styleClass="backgroundMain" stylesheets="@../../../styles/GameView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.GameController">
    <top>
       <VBox prefHeight="88.0" prefWidth="636.0" BorderPane.alignment="CENTER">
@@ -48,6 +47,20 @@
                                              <children>
                                                 <Label styleClass="thank-you" text="Player Name" />
                                                 <Label fx:id="txtPlayerName" prefHeight="17.0" prefWidth="119.0" styleClass="Button3">
+                                                   <HBox.margin>
+                                                      <Insets left="12.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <Label styleClass="thank-you" text="Level:" />
+                                                <Label fx:id="txtLevel" prefHeight="17.0" prefWidth="127.0" styleClass="Button3">
                                                    <HBox.margin>
                                                       <Insets left="12.0" />
                                                    </HBox.margin>
@@ -119,7 +132,7 @@
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #F5DEB3;" BorderPane.alignment="CENTER">
          <children>
-            <GridPane fx:id="BoardGame" alignment="CENTER" gridLinesVisible="true" prefWidth="487.0" VBox.vgrow="ALWAYS">
+            <GridPane fx:id="BoardGame" alignment="CENTER" focusTraversable="true" prefHeight="364.0" prefWidth="404.0" VBox.vgrow="ALWAYS">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

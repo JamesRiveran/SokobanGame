@@ -33,6 +33,8 @@ public class Square {
             System.out.println("Error loading image: " + e.getMessage()); // Depuración
         }
         buttonSquare.setPrefSize(100, 100);
+        buttonSquare.setFocusTraversable(false); // Configura los botones para que no tomen el enfoque
+
     }
 
     public Button getButtonSquare() {

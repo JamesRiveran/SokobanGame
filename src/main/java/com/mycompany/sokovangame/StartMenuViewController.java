@@ -36,6 +36,7 @@ public class StartMenuViewController implements Initializable {
     private int characterNumber;
     private String GameName;
     private String PlayerName;
+    private int level;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -157,8 +158,8 @@ public class StartMenuViewController implements Initializable {
 
             // Obtener el controlador de la vista del juego
             GameController controller = loader.getController();
-            controller.setItems(characterNumber,itemName,playerName); // Pasar el número del personaje
-    
+            controller.setItems(characterNumber, itemName, playerName, level); // Pasar el número del personaje
+
             // Crear un nuevo Stage para la vista del juego
             Stage gameStage = new Stage();
             gameStage.setTitle("Game");
@@ -215,6 +216,28 @@ public class StartMenuViewController implements Initializable {
 
     public void setItemName(String itemName) {
         this.txtItemName.setText(itemName);
+    }
+
+    public void getLevel(int level) {
+        this.level = level;
+        System.out.println(level);
+    }
+
+    @FXML
+    private void ChooseLevelButton(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChooseLevelView.fxml"));
+            Parent chooseLevelView = loader.load();
+
+            // Obtener el controlador de la vista de selección de nivel
+            ChooseLevelViewController levelController = loader.getController();
+            // Pasar el controlador de StartMenuViewController
+            levelController.setStartMenuController(this);
+
+            stackPane.getChildren().add(chooseLevelView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

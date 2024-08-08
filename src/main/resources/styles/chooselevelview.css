@@ -7,42 +7,11 @@
     -fx-opacity: 0.98;
 }
 .character1{
-    -fx-background-image: url("../imagesGame/steve.png");
+    -fx-background-image: url("../images/d.png");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
 }
-
-.character2{
-    -fx-background-image: url("../imagesGame/alex.png");
-    -fx-background-size: 100% 100%;
-    -fx-opacity: 0.98;
-}
-
-.character3{
-    -fx-background-image: url("../imagesGame/creeper.png");
-    -fx-background-size: 100% 100%;
-    -fx-opacity: 0.98;
-}
-
-.character4{
-    -fx-background-image: url("../imagesGame/wolf.png");
-    -fx-background-size: 100% 100%;
-    -fx-opacity: 0.98;
-}
-
-.character5{
-    -fx-background-image: url("../imagesGame/esqueleto.png");
-    -fx-background-size: 100% 100%;
-    -fx-opacity: 0.98;
-}
-
-.character6{
-    -fx-background-image: url("../imagesGame/zombie.png");
-    -fx-background-size: 100% 100%;
-    -fx-opacity: 0.98;
-}
-
-.Button2 {
+.text1 {
     
     -fx-text-fill: white; /* Color del texto blanco */
     -fx-font-size: 42px; /* Tamaño de la fuente específico para Button2 */
@@ -51,9 +20,9 @@
     -fx-font-family: "Yu Gothic"; /* Cambia a la fuente deseada */
 }
 
-.Button3 {
+.text2 {
     -fx-background-color: transparent; /* Color de fondo específico para Button2 */
-    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-text-fill: black; /* Color del texto blanco */
     -fx-font-size: 17px; /* Tamaño de la fuente específico para Button2 */
     -fx-background-insets: 0, 0, 2;
     -fx-border-radius: 50%; /* Bordes redondeados */

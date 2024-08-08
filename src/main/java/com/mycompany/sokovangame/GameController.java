@@ -10,24 +10,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
- * 
+ *
  * Author marco
  */
-
 public class GameController implements Initializable {
 
     private int characterNumber;
     private String GameName;
     private String PlayerName;
+    private int level;
     private long iniciarTiempo;
     private boolean corriendo = false;
     private AnimationTimer timer;
@@ -47,23 +53,32 @@ public class GameController implements Initializable {
     private Label txtPlayerName;
     @FXML
     private Label txtCronometer;
+    @FXML
+    private Label txtLevel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeTypeMap();
-        try {
-            loadBoard("levels/level1.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         setupControls();
+
+        Platform.runLater(() -> {
+            BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
+        });
+
         iniciar();
     }
 
-    public void setItems(int characterNumber, String GameName, String PlayerName) {
+    public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
+        this.level = level;
+         try {
+            loadBoard("levels/level"+level+".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(level);
         updatePlayerPosition();
     }
 
@@ -75,6 +90,7 @@ public class GameController implements Initializable {
         typeMap.put('$', 1); // Caja
         typeMap.put('!', 4); // Caja en lugar correcto
         typeMap.put('@', 0); // Posición inicial del jugador, inicialmente vacía
+        BoardGame.requestFocus();
     }
 
     private void loadBoard(String resourcePath) throws IOException {
@@ -82,7 +98,7 @@ public class GameController implements Initializable {
         if (is == null) {
             throw new IOException("Resource not found: " + resourcePath);
         }
-        
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String line;
         int row = 0;
@@ -113,13 +129,17 @@ public class GameController implements Initializable {
     }
 
     public void setupControls() {
+
         BoardGame.setFocusTraversable(true);
         BoardGame.setOnKeyPressed(this::keyControls);
+        BoardGame.requestFocus(); // Solicitar el enfoque para el GridPane
+
     }
 
     public void updatePlayerPosition() {
         txtGameName.setText(GameName);
         txtPlayerName.setText(PlayerName);
+        txtLevel.setText(String.valueOf(level));
         if (playerPosX >= 0 && playerPosY >= 0) {
             gameMatrix[playerPosX][playerPosY].setType(characterNumber);
         }
@@ -232,16 +252,39 @@ public class GameController implements Initializable {
 
     @FXML
     private void undoButton(ActionEvent event) {
-        
+
     }
 
     @FXML
     private void optionsButton(ActionEvent event) {
-        
+
     }
 
     @FXML
     private void helpButton(ActionEvent event) {
-        
+        try {
+            // Cargar la vista de ayuda
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpView.fxml"));
+            Parent helpView = loader.load();
+
+            // Crear una nueva escena con la vista de ayuda
+            Scene scene = new Scene(helpView);
+
+            // Crear una nueva ventana (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Help");
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            stage.setResizable(false);
+            stage.setScene(scene);
+
+            // Mostrar la nueva ventana
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Platform.runLater(() -> {
+            BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
+        });
     }
 }

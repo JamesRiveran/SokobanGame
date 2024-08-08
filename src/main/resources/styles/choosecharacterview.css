@@ -53,7 +53,7 @@
 
 .Button3 {
     -fx-background-color: transparent; /* Color de fondo específico para Button2 */
-    -fx-text-fill: black; /* Color del texto blanco */
+    -fx-text-fill: white; /* Color del texto blanco */
     -fx-font-size: 17px; /* Tamaño de la fuente específico para Button2 */
     -fx-background-insets: 0, 0, 2;
     -fx-border-radius: 50%; /* Bordes redondeados */
