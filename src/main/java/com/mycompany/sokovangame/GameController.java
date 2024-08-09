@@ -36,21 +36,18 @@ public class GameController implements Initializable {
     private String GameName;
     private String PlayerName;
     private int level;
-    private long iniciarTiempo;
-    private boolean corriendo = false;
+    private long iniciarTiempo;//english
+    private boolean corriendo = false;//english
     private AnimationTimer timer;
     private long lastUpdate = 0;
-    private long tiempoAcumulado = 0;
+    private long tiempoAcumulado = 0;//english
     private int playerPosX = -1;
     private int playerPosY = -1;
     private Map<Character, Integer> typeMap;
 
     @FXML
     private GridPane BoardGame;
-
-    //private Square[][] gameMatrix = new Square[10][10];
     private List<List<Square>> gameMatrix = new ArrayList<>();
-    ;
     @FXML
     private Label txtGameName;
     @FXML
@@ -59,8 +56,6 @@ public class GameController implements Initializable {
     private Label txtCronometer;
     @FXML
     private Label txtLevel;
-    @FXML
-    private GridPane auxBoard;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -71,9 +66,7 @@ public class GameController implements Initializable {
             BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
         });
 
-        setItems(5, "asd", "asdasd", 1);
-        gameMatrix.get(2).get(1).getButtonSquare().setText("asdasdasd");
-        getListSquare(2, 1).getButtonSquare().setText("444444");
+        setItems(5, "asd", "asdasd", 1);//debug
         iniciar();
     }
 
@@ -87,6 +80,7 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         System.out.println(level);
         updatePlayerPosition();
     }
@@ -156,20 +150,36 @@ public class GameController implements Initializable {
         txtGameName.setText(GameName);
         txtPlayerName.setText(PlayerName);
         txtLevel.setText(String.valueOf(level));
+
         if (playerPosX >= 0 && playerPosY >= 0) {
             getListSquare(playerPosX, playerPosY).setType(characterNumber);
         }
     }
 
     public void setPlayerPosition(int x, int y) {
-        if (isValidPosition(x, y)) {
+        int directionX = x - playerPosX, newCordX = directionX + playerPosX;
+        int directionY = y - playerPosY, newCordY = directionY + playerPosY;
+        if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
         } else {
-            System.out.println("Cannot move out of bounds!");
+            System.out.println("Cannot move there!");
         }
+    }
+
+    private boolean isMoveBox(int newCordX, int newCordY, int directionX, int directionY) {
+        int newBoxCordX = playerPosX + directionX * 2, newBoxCordY = playerPosY + directionY * 2;
+
+        if (getListSquare(newCordX, newCordY).getType() == 1) {
+            if (getListSquare(newBoxCordX, newBoxCordY).getType() != 0 && getListSquare(newBoxCordX, newBoxCordY).getType() != 2) {
+                return false;
+            } else{
+               getListSquare(newBoxCordX, newBoxCordY).setType(1);
+            }
+        }
+        return true;
     }
 
     private boolean isValidPosition(int x, int y) {
@@ -179,7 +189,6 @@ public class GameController implements Initializable {
     public void keyControls(KeyEvent event) {
         switch (event.getCode()) {
             case W:
-
                 setPlayerPosition(playerPosX - 1, playerPosY);
                 break;
             case A:
@@ -197,7 +206,7 @@ public class GameController implements Initializable {
         }
     }
 
-    private void iniciar() {
+    private void iniciar() {//english
         updatePlayerPosition();
         if (!corriendo && iniciarTiempo == 0) {
             corriendo = true;
@@ -212,14 +221,14 @@ public class GameController implements Initializable {
         }
     }
 
-    private void reiniciar() {
+    private void reiniciar() {//english
         detener();
         iniciarTiempo = 0;
         tiempoAcumulado = 0;
         txtCronometer.setText("00:00:00");
     }
 
-    private void detener() {
+    private void detener() {//english
         if (corriendo) {
             corriendo = false;
             long currentTime = System.currentTimeMillis();
@@ -231,7 +240,7 @@ public class GameController implements Initializable {
         }
     }
 
-    private void reanudar() {
+    private void reanudar() {//english
         if (!corriendo && iniciarTiempo != 0) {
             corriendo = true;
             iniciarTiempo = System.currentTimeMillis() - tiempoAcumulado;
@@ -272,10 +281,6 @@ public class GameController implements Initializable {
 
     }
 
-    @FXML
-    private void optionsButton(ActionEvent event) {
-
-    }
 
     @FXML
     private void helpButton(ActionEvent event) {
