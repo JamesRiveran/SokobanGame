@@ -44,6 +44,11 @@
                <VBox.margin>
                   <Insets top="6.0" />
                </VBox.margin></Label>
+            <Button mnemonicParsing="false" onAction="#ChooseLevelButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="Choose Level">
+               <font>
+                  <Font size="1.0" />
+               </font>
+            </Button>
             <Button layoutX="27.0" layoutY="161.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="Load Game">
                <font>
                   <Font size="1.0" />

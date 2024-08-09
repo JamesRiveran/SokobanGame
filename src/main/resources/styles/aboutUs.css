@@ -1,14 +1,12 @@
-.root {
+.backgroundMain{
     -fx-background-image: url("../images/i.jpeg");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
-    -fx-font-family: 'Minecraft', 'Arial', sans-serif;
 }
-
 .title {
     -fx-font-size: 38px;
     -fx-font-weight: bold;
-    -fx-fill: #54FC54;
+    -fx-fill: #98FB98;
 }
 
 .subtitle {
@@ -19,13 +17,13 @@
 .section-header {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-fill: #54FC54;
+    -fx-fill: #98FB98; 
 }
 
 .section-description {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-fill: #AAAAAA;
+    -fx-fill: #FFFFFF; 
 }
 
 .content {
@@ -35,21 +33,21 @@
 
 .list-item {
     -fx-font-size: 16px;
-    -fx-fill: #55FFFF;
+    -fx-fill: #FFFFFF;
 }
 
 .developer-name {
     -fx-font-size: 16px;
-    -fx-fill: #FF5555;
+    -fx-fill: #2E8B57; 
 }
 
 .thank-you {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-fill: #54FC54;
+    -fx-fill: #98FB98;
 }
 
 .contact {
     -fx-font-size: 16px;
-    -fx-fill: #FF5555;
+    -fx-fill: #FFFFFF; 
 }

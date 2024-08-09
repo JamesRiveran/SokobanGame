@@ -48,8 +48,8 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Button mnemonicParsing="false" onAction="#CreeperButton" prefHeight="78.0" prefWidth="80.0" styleClass="character3" VBox.vgrow="ALWAYS" />
-                                    <Label style="-fx-background-color: #2E8B57;" styleClass="Button3" text="Creeper" />
+                                    <Button mnemonicParsing="false" onAction="#WolfButton" prefHeight="78.0" prefWidth="80.0" styleClass="character4" VBox.vgrow="ALWAYS" />
+                                    <Label style="-fx-background-color: #2E8B57;" styleClass="Button3" text="Wolf" />
                                  </children>
                               </VBox>
                            </children>
@@ -66,8 +66,8 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Button mnemonicParsing="false" onAction="#EnderManButton" prefHeight="78.0" prefWidth="80.0" styleClass="character4" VBox.vgrow="ALWAYS" />
-                                    <Label style="-fx-background-color: #2E8B57;" styleClass="Button3" text="EnderMan" />
+                                    <Button mnemonicParsing="false" onAction="#CreeperButton" prefHeight="78.0" prefWidth="80.0" styleClass="character3" VBox.vgrow="ALWAYS" />
+                                    <Label style="-fx-background-color: #2E8B57;" styleClass="Button3" text="Creeper" />
                                  </children>
                               </VBox>
                            </children>

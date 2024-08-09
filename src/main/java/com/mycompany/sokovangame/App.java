@@ -20,7 +20,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 
         
-        scene = new Scene(loadFXML("StartMenuView"), 840, 640);
+        scene = new Scene(loadFXML("Game"), 840, 640);
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
 
         stage.setScene(scene);

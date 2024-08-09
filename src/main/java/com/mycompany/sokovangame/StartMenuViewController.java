@@ -34,7 +34,9 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private Label lblCharacter;
     private int characterNumber;
-
+    private String GameName;
+    private String PlayerName;
+    private int level;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -150,23 +152,17 @@ public class StartMenuViewController implements Initializable {
             // Mostrar advertencia al usuario
             showAlert("Make sure you fill in the required spaces.");
         } else {
-            // Lógica para iniciar el juego si todos los campos están llenos y un personaje está seleccionado
-            System.out.println("Iniciando juego con: ");
-            System.out.println("Nombre del jugador: " + playerName);
-            System.out.println("Nombre de la partida: " + itemName);
-            System.out.println("Número del personaje: " + characterNumber);
 
-            // Cargar la vista del juego en un nuevo Stage
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
             // Obtener el controlador de la vista del juego
             GameController controller = loader.getController();
-            controller.setCharacterNumber(characterNumber); // Pasar el número del personaje
+            controller.setItems(characterNumber, itemName, playerName, level); // Pasar el número del personaje
 
             // Crear un nuevo Stage para la vista del juego
             Stage gameStage = new Stage();
-            gameStage.setTitle("Juego");
+            gameStage.setTitle("Game");
             gameStage.setScene(new Scene(gameView, 800, 600)); // Tamaño preferido (ancho, alto)
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
@@ -205,13 +201,10 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private void AboutButton(ActionEvent event) {
         try {
+            showStartMenu();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AboutUs.fxml"));
             Parent aboutUsView = loader.load();
-
-            StackPane aboutUsStackPane = new StackPane(aboutUsView);
-            aboutUsStackPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
-
-            stackPane.getChildren().add(aboutUsStackPane);
+            stackPane.getChildren().add(aboutUsView);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -223,6 +216,28 @@ public class StartMenuViewController implements Initializable {
 
     public void setItemName(String itemName) {
         this.txtItemName.setText(itemName);
+    }
+
+    public void getLevel(int level) {
+        this.level = level;
+        System.out.println(level);
+    }
+
+    @FXML
+    private void ChooseLevelButton(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChooseLevelView.fxml"));
+            Parent chooseLevelView = loader.load();
+
+            // Obtener el controlador de la vista de selección de nivel
+            ChooseLevelViewController levelController = loader.getController();
+            // Pasar el controlador de StartMenuViewController
+            levelController.setStartMenuController(this);
+
+            stackPane.getChildren().add(chooseLevelView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
