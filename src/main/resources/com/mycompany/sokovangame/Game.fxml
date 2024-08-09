@@ -97,11 +97,6 @@
                         <Insets top="34.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#optionsButton" styleClass="Button2" text="OPTIONS">
-                     <VBox.margin>
-                        <Insets top="34.0" />
-                     </VBox.margin>
-                  </Button>
                   <Button mnemonicParsing="false" onAction="#helpButton" styleClass="Button2" text="HELP">
                      <VBox.margin>
                         <Insets top="34.0" />

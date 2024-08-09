@@ -15,6 +15,7 @@ public class Square {
     public Square(int type) {
         this.type = type;
         this.buttonSquare = new Button();
+        buttonSquare.setText(this.type+"");
         updateButtonVisuals();
     }
 
@@ -47,6 +48,7 @@ public class Square {
 
     public void setType(int type) {
         this.type = type;
+        this.buttonSquare.setText(type+"");
         updateButtonVisuals();
     }
 }
