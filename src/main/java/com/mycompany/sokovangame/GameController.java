@@ -1,15 +1,22 @@
 package com.mycompany.sokovangame;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import model.Square;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -17,8 +24,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -44,6 +55,7 @@ public class GameController implements Initializable {
     private int playerPosX = -1;
     private int playerPosY = -1;
     private Map<Character, Integer> typeMap;
+    private Map<Integer, Character> reverseTypeMap;
 
     @FXML
     private GridPane BoardGame;
@@ -82,21 +94,46 @@ public class GameController implements Initializable {
         }
         
         System.out.println(level);
-        updatePlayerPosition();
+    }
+    
+    public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) {
+        this.characterNumber = characterNumber;
+        this.GameName = GameName;
+        this.PlayerName = PlayerName;
+        this.level = level;
+        try {
+            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println(level);
     }
 
     private void initializeTypeMap() {
         typeMap = new HashMap<>();
-        typeMap.put(' ', 0); // Espacio - camino vacío
-        typeMap.put('#', 3); // Muro
-        typeMap.put('.', 2); // Lugar para una caja
-        typeMap.put('$', 1); // Caja
-        typeMap.put('!', 4); // Caja en lugar correcto
-        typeMap.put('@', 0); // Posición inicial del jugador, inicialmente vacía
+        typeMap.put(' ', 0); 
+        typeMap.put('#', 3);
+        typeMap.put('.', 2);
+        typeMap.put('$', 1);
+        typeMap.put('!', 4); 
+        typeMap.put('@', 0);
         BoardGame.requestFocus();
+        
+        reverseTypeMap = new HashMap<>();
+        reverseTypeMap.put(0, ' '); 
+        reverseTypeMap.put(3, '#'); 
+        reverseTypeMap.put(2, '.'); 
+        reverseTypeMap.put(1, '$'); 
+        reverseTypeMap.put(4, '!'); 
     }
+    
+    
 
     private void loadBoard(String resourcePath) throws IOException {
+        BoardGame.getChildren().clear();
+        gameMatrix.clear(); 
+        
         InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
         if (is == null) {
             throw new IOException("Resource not found: " + resourcePath);
@@ -117,17 +154,17 @@ public class GameController implements Initializable {
                     playerPosY = col;
                     type = characterNumber;
                 }
-                rowList.add(new Square(type));
+                Square square = new Square(type);
+                rowList.add(square);
+                BoardGame.add(square.getButtonSquare(), col, row);
             }
             gameMatrix.add(rowList);
             row++;
         }
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                BoardGame.add(getListSquare(i, j).getButtonSquare(), j, i);
-            }
-        }
+        updatePlayerPosition();
+        BoardGame.requestFocus();
     }
+
 
     public Square getListSquare(int i, int j) {
         return gameMatrix.get(i).get(j);
@@ -261,9 +298,7 @@ public class GameController implements Initializable {
             long segundos = transcurrido / 1000;
             long minutos = (segundos / 60) % 60;
             long horas = segundos / 3600;
-
             txtCronometer.setText(String.format("%02d:%02d:%02d", horas, minutos, segundos % 60));
-
             long now = System.nanoTime();
             if (now - lastUpdate >= 1_000_000_000) {
                 lastUpdate = now;
@@ -272,15 +307,101 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void resetButton(ActionEvent event) {
-        reiniciar();
+    private void saveGameButton(ActionEvent event) {
+        try {
+            Path resourceRoot = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent();
+            Path levelsSavedPath = resourceRoot.resolve("src/main/resources/levelsSaved");
+            File directory = levelsSavedPath.toFile();
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            Path saveFilePath = levelsSavedPath.resolve("gameSavedLevel" + level + ".txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFilePath.toFile()))) {
+                for (int i = 0; i < gameMatrix.size(); i++) {
+                    StringBuilder line = new StringBuilder();
+                    for (int j = 0; j < gameMatrix.get(i).size(); j++) {
+                        Square square = getListSquare(i, j);
+                        int type = square.getType();
+                        char symbol = reverseTypeMap.getOrDefault(type, ' ');
+
+                        if (i == playerPosX && j == playerPosY) {
+                            symbol = '@';
+                        }
+                        line.append(symbol);
+                    }
+                    writer.write(line.toString());
+                    writer.newLine();
+                }
+                writer.newLine();
+                writer.write("Player Name: " + PlayerName);
+                writer.newLine();
+                writer.write("Game Name: " + GameName);
+                writer.newLine();
+                writer.write("Level: " + level);
+                writer.newLine();
+                writer.write("Character Number: " + characterNumber);
+                writer.flush();
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Game Saved");
+                alert.setHeaderText(null);
+                alert.setContentText("Your game has been saved successfully!");
+                alert.showAndWait();
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Save Error");
+            alert.setHeaderText("Failed to Save Game");
+            alert.setContentText("There was an error saving your game.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
-    private void undoButton(ActionEvent event) {
+    private void resetButton(ActionEvent event) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Reset Level Confirmation");
+        alert.setHeaderText("Are you sure you want to reset the level?");
+        alert.setContentText("You will lose your current progress in this level.");
 
+        Optional<ButtonType> result = alert.showAndWait();
+        
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                loadBoard("levels/level" + level + ".txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    @FXML
+    private void mainMenuButton(ActionEvent event) throws IOException {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Return to Main Menu Confirmation");
+        alert.setHeaderText("Are you sure you want to return to the main menu?");
+        alert.setContentText("You will lose your current progress if you haven't saved your game.");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            Parent startMenuView = loader.load();
+            Scene currentScene = ((Node) event.getSource()).getScene();
+            currentScene.setRoot(startMenuView);
+        }
+    }
+    
+    @FXML
+    private void closeButton(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Confirmation");
+        alert.setHeaderText("Are you sure you want to exit?");
+        alert.setContentText("Press OK to exit, or Cancel to stay.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Platform.exit();
+        }
+    }
 
     @FXML
     private void helpButton(ActionEvent event) {
