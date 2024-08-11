@@ -14,10 +14,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Stack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -47,16 +49,19 @@ public class GameController implements Initializable {
     private String GameName;
     private String PlayerName;
     private int level;
-    private long iniciarTiempo;//english
-    private boolean corriendo = false;//english
     private AnimationTimer timer;
     private long lastUpdate = 0;
-    private long tiempoAcumulado = 0;//english
     private int playerPosX = -1;
     private int playerPosY = -1;
+    int a, b;
+    private int initialGoalX;
+    private int initialGoalY;
     private Map<Character, Integer> typeMap;
     private Map<Integer, Character> reverseTypeMap;
-
+    private Stack<int[]> boxesOnGoals = new Stack<>();
+    boolean band = false;
+    boolean band2 = true;
+    boolean band3 = true;
     @FXML
     private GridPane BoardGame;
     private List<List<Square>> gameMatrix = new ArrayList<>();
@@ -72,6 +77,7 @@ public class GameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeTypeMap();
+
         setupControls();
 
         Platform.runLater(() -> {
@@ -79,7 +85,7 @@ public class GameController implements Initializable {
         });
 
         setItems(5, "asd", "asdasd", 1);//debug
-        iniciar();
+
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
@@ -92,10 +98,17 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        System.out.println(level);
+
+        // System.out.println(level);
     }
-    
+    private Map<Integer, Integer> levelGoals = Map.of(
+            1, 4,
+            2, 5,
+            3, 7,
+            4, 7,
+            5, 7
+    );
+
     public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
@@ -106,34 +119,30 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        System.out.println(level);
     }
 
     private void initializeTypeMap() {
         typeMap = new HashMap<>();
-        typeMap.put(' ', 0); 
+        typeMap.put(' ', 0);
         typeMap.put('#', 3);
         typeMap.put('.', 2);
         typeMap.put('$', 1);
-        typeMap.put('!', 4); 
+        typeMap.put('!', 4);
         typeMap.put('@', 0);
         BoardGame.requestFocus();
-        
+
         reverseTypeMap = new HashMap<>();
-        reverseTypeMap.put(0, ' '); 
-        reverseTypeMap.put(3, '#'); 
-        reverseTypeMap.put(2, '.'); 
-        reverseTypeMap.put(1, '$'); 
-        reverseTypeMap.put(4, '!'); 
+        reverseTypeMap.put(0, ' ');
+        reverseTypeMap.put(3, '#');
+        reverseTypeMap.put(2, '.');
+        reverseTypeMap.put(1, '$');
+        reverseTypeMap.put(4, '!');
     }
-    
-    
 
     private void loadBoard(String resourcePath) throws IOException {
         BoardGame.getChildren().clear();
-        gameMatrix.clear(); 
-        
+        gameMatrix.clear();
+
         InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
         if (is == null) {
             throw new IOException("Resource not found: " + resourcePath);
@@ -165,8 +174,10 @@ public class GameController implements Initializable {
         BoardGame.requestFocus();
     }
 
-
     public Square getListSquare(int i, int j) {
+        if (i < 0 || i >= gameMatrix.size() || j < 0 || j >= gameMatrix.get(i).size()) {
+            throw new IndexOutOfBoundsException("Index out of bounds: i=" + i + ", j=" + j);
+        }
         return gameMatrix.get(i).get(j);
     }
 
@@ -187,36 +198,170 @@ public class GameController implements Initializable {
         txtGameName.setText(GameName);
         txtPlayerName.setText(PlayerName);
         txtLevel.setText(String.valueOf(level));
-
         if (playerPosX >= 0 && playerPosY >= 0) {
             getListSquare(playerPosX, playerPosY).setType(characterNumber);
+
         }
+
     }
 
     public void setPlayerPosition(int x, int y) {
-        int directionX = x - playerPosX, newCordX = directionX + playerPosX;
-        int directionY = y - playerPosY, newCordY = directionY + playerPosY;
-        if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
+        int directionX = x - playerPosX;
+        int directionY = y - playerPosY;
+        int newCordX = playerPosX + directionX;
+        int newCordY = playerPosY + directionY;
+        int newItemCordX = playerPosX + directionX;
+        int newItemCordY = playerPosY + directionY;
+        int BoxCordX = playerPosX + directionX * 2;
+        int BoxCordY = playerPosY + directionY * 2;
+
+        if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 2 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
+           /* if (getListSquare(BoxCordX, BoxCordY).getType() == 1) {
+                band2 = false;
+                System.out.println("entro1");
+            }*/
+
+            restoreItem(initialGoalX, initialGoalY, directionX, directionY);
+           
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
+            getListSquare(playerPosX, playerPosY).setType(0);
+            playerPosX = x;
+            playerPosY = y;
+            initialGoalX = newItemCordX;
+            initialGoalY = newItemCordY;
+            band = true;
+            updatePlayerPosition();
+
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 2 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY) && isMovePlayer(newCordX, newCordY, directionX, directionY)) {
+            int newBoxCordX = playerPosX + directionX;
+            int newBoxCordY = playerPosY + directionY;
+
+            getListSquare(playerPosX, playerPosY).setType(0);
+            playerPosX = x;
+            playerPosY = y;
+            initialGoalX = newItemCordX;
+            initialGoalY = newItemCordY;
+            takeOutBox(newCordX, newCordY, directionX, directionY);
+            band = true;
+            updatePlayerPosition();
         } else {
+
             System.out.println("Cannot move there!");
         }
+        checkLevelCompletion();
     }
 
     private boolean isMoveBox(int newCordX, int newCordY, int directionX, int directionY) {
-        int newBoxCordX = playerPosX + directionX * 2, newBoxCordY = playerPosY + directionY * 2;
+        int newBoxCordX = playerPosX + directionX * 2;
+        int newBoxCordY = playerPosY + directionY * 2;
 
         if (getListSquare(newCordX, newCordY).getType() == 1) {
-            if (getListSquare(newBoxCordX, newBoxCordY).getType() != 0 && getListSquare(newBoxCordX, newBoxCordY).getType() != 2) {
+            int targetType = getListSquare(newBoxCordX, newBoxCordY).getType();
+            if (targetType != 0 && targetType != 2) {
                 return false;
-            } else{
-               getListSquare(newBoxCordX, newBoxCordY).setType(1);
+            } else if (targetType == 2) {
+                getListSquare(newBoxCordX, newBoxCordY).setType(4);
+                initialGoalX = newBoxCordX;
+                initialGoalY = newBoxCordY;
+                boxesOnGoals.push(new int[]{newBoxCordX, newBoxCordY});
+            } else {
+                getListSquare(newBoxCordX, newBoxCordY).setType(1);
             }
         }
+
         return true;
+    }
+
+    private boolean isMovePlayer(int newCordX, int newCordY, int directionX, int directionY) {
+        int newBoxCordX = playerPosX + directionX * 2;
+        int newBoxCordY = playerPosY + directionY * 2;
+        int targetType = getListSquare(newBoxCordX, newBoxCordY).getType();
+
+        if (targetType != 0 && targetType != 2) {
+            initialGoalX = newBoxCordX;
+            initialGoalY = newBoxCordY;
+            return false;
+        } else {
+            getListSquare(newCordX, newCordY).setType(targetType);
+            band = true;
+        }
+
+        return true;
+    }
+
+    private void takeOutBox(int newCordX, int newCordY, int directionX, int directionY) {
+        int newBoxCordX = playerPosX + directionX;
+        int newBoxCordY = playerPosY + directionY;
+
+        int targetType = getListSquare(newBoxCordX, newBoxCordY).getType();
+
+        if (targetType == 0 || targetType == 2) {
+            getListSquare(newBoxCordX, newBoxCordY).setType(1);
+            updatePlayerPosition();
+        } else {
+            System.out.println("Cannot move there!");
+        }
+
+        if (!boxesOnGoals.isEmpty()) {
+            boxesOnGoals.pop();
+        } else {
+            System.out.println("La pila ya está vacía.");
+        }
+        //   System.out.println(boxesOnGoals);
+    }
+
+    private void restoreItem(int initialGoalX, int initialGoalY, int directionX, int directionY) {
+        int newBoxCordX = playerPosX + directionX;
+        int newBoxCordY = playerPosY + directionY;
+        if (band == true) {
+              getListSquare(initialGoalX, initialGoalY).setType(2);
+            band = false;
+        }
+        band2 = true;
+    }
+
+    private boolean isLevelCompleted(int currentLevel) {
+        int totalGoals = levelGoals.getOrDefault(currentLevel, 0);
+        // System.out.println(boxesOnGoals.size());
+        return boxesOnGoals.size() == totalGoals;
+    }
+
+    private void checkLevelCompletion() {
+        if (isLevelCompleted(level)) {
+            try {
+                // Cargar la vista de ayuda
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
+                Parent nextLevel = loader.load();
+
+                // Crear una nueva escena con la vista de ayuda y establecer el tamaño
+                Scene scene = new Scene(nextLevel, 800, 600);
+
+                // Obtener el controlador y pasarle los datos necesarios
+                NextLevelViewController controller = loader.getController();
+                controller.setItems(characterNumber, GameName, PlayerName, level); // Pasar el número del personaje
+
+                // Crear una nueva ventana (Stage)
+                Stage stage = new Stage();
+                stage.setTitle("Next Level");
+                stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+                stage.setResizable(false);
+                stage.setScene(scene);  // Asignar la escena con el tamaño especificado
+
+                // Mostrar la nueva ventana
+                stage.show();
+
+                // Cerrar la ventana del juego actual
+                Stage currentStage = (Stage) BoardGame.getScene().getWindow();
+                currentStage.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean isValidPosition(int x, int y) {
@@ -240,69 +385,6 @@ public class GameController implements Initializable {
 
             default:
                 break;
-        }
-    }
-
-    private void iniciar() {//english
-        updatePlayerPosition();
-        if (!corriendo && iniciarTiempo == 0) {
-            corriendo = true;
-            iniciarTiempo = System.currentTimeMillis();
-            timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    updateCrono(tiempoAcumulado);
-                }
-            };
-            timer.start();
-        }
-    }
-
-    private void reiniciar() {//english
-        detener();
-        iniciarTiempo = 0;
-        tiempoAcumulado = 0;
-        txtCronometer.setText("00:00:00");
-    }
-
-    private void detener() {//english
-        if (corriendo) {
-            corriendo = false;
-            long currentTime = System.currentTimeMillis();
-            tiempoAcumulado = currentTime - iniciarTiempo;
-            if (timer != null) {
-                timer.stop();
-                timer = null;
-            }
-        }
-    }
-
-    private void reanudar() {//english
-        if (!corriendo && iniciarTiempo != 0) {
-            corriendo = true;
-            iniciarTiempo = System.currentTimeMillis() - tiempoAcumulado;
-            timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    updateCrono(tiempoAcumulado);
-                }
-            };
-            timer.start();
-        }
-    }
-
-    private void updateCrono(Long segundosAContar) {
-        if (corriendo) {
-            long ahora = System.currentTimeMillis();
-            long transcurrido = ahora - iniciarTiempo + (segundosAContar * 1000);
-            long segundos = transcurrido / 1000;
-            long minutos = (segundos / 60) % 60;
-            long horas = segundos / 3600;
-            txtCronometer.setText(String.format("%02d:%02d:%02d", horas, minutos, segundos % 60));
-            long now = System.nanoTime();
-            if (now - lastUpdate >= 1_000_000_000) {
-                lastUpdate = now;
-            }
         }
     }
 
@@ -365,7 +447,7 @@ public class GameController implements Initializable {
         alert.setContentText("You will lose your current progress in this level.");
 
         Optional<ButtonType> result = alert.showAndWait();
-        
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 loadBoard("levels/level" + level + ".txt");
@@ -390,7 +472,7 @@ public class GameController implements Initializable {
             currentScene.setRoot(startMenuView);
         }
     }
-    
+
     @FXML
     private void closeButton(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

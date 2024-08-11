@@ -158,7 +158,7 @@ public class StartMenuViewController implements Initializable {
         String itemName = txtItemName.getText();
 
         // Verificar si los campos de texto están llenos y si un personaje ha sido seleccionado
-        if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0) {
+        if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0 || level==0) {
             // Mostrar advertencia al usuario
             showAlert("Make sure you fill in the required spaces.");
         } else {
