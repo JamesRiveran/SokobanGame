@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="559.0" prefWidth="718.0" stylesheets="@../../../styles/startmenuview.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.StartMenuViewController">
+<BorderPane fx:id="mainBorderPane" prefHeight="559.0" prefWidth="718.0" stylesheets="@../../../styles/startmenuview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.StartMenuViewController">
    <left>
       <VBox alignment="CENTER" prefHeight="327.0" prefWidth="147.0" style="-fx-background-color: #98FB98;" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="Button3" text="Game Name">
+            <Label styleClass="text1" text="Game Name">
                <VBox.margin>
                   <Insets top="21.0" />
                </VBox.margin></Label>
@@ -22,7 +22,7 @@
                   <Insets left="34.0" right="34.0" />
                </VBox.margin>
             </TextField>
-            <Label styleClass="Button3" text="Player's name" VBox.vgrow="ALWAYS">
+            <Label styleClass="text1" text="Player's name" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets top="24.0" />
                </VBox.margin>
@@ -65,7 +65,7 @@
                   <Insets top="21.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#AboutButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="About">
+            <Button mnemonicParsing="false" onAction="#AboutButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="About us">
                <font>
                   <Font size="1.0" />
                </font>
