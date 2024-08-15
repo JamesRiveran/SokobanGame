@@ -12,7 +12,7 @@
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #744E3B;">
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2E8B57;" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #98FB98;" VBox.vgrow="ALWAYS">
                <children>
                   <Label text="Choose your character">
                      <font>

@@ -1,15 +1,15 @@
-##########
-# $     $#
-# @     $#
+######
+#    #####
+#    $   #
 #        #
-#. .     #
+#! @   ! #
 #        #
-#       $#
-#. .     #
 #        #
-##########
+#!  .    #
+#####    #
+    ######
 
-Player Name: asdasd
-Game Name: asd
+Player Name: ads
+Game Name: sad
 Level: 1
-Character Number: 5
+Character Number: 8

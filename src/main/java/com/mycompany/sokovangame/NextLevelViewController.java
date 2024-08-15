@@ -43,10 +43,31 @@ public class NextLevelViewController implements Initializable {
 
     @FXML
     private void reviewButton(ActionEvent event) {
-        
-        
-        
+        try {
+            // Cargar la vista del juego (Game.fxml)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            Parent gameView = loader.load();
+
+            // Obtener el controlador de la vista del juego
+            GameController controller = loader.getController();
+
+            // Llamar al método playRepetition en el controlador de Game
+            controller.playRepetition();
+
+            // Crear una nueva ventana o puedes manipular la existente
+            Stage gameStage = new Stage();
+            gameStage.setTitle("Game");
+            gameStage.setScene(new Scene(gameView, 800, 600)); // Configurar el tamaño preferido
+            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            gameStage.setResizable(true);
+            gameStage.initModality(Modality.NONE); 
+            gameStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
         this.characterNumber = characterNumber;

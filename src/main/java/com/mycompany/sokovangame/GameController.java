@@ -181,11 +181,14 @@ public class GameController implements Initializable {
                     playerPosX = row;
                     playerPosY = col;
                     type = characterNumber;
+                    initialPlayerPosX=row;
+                    initialPlayerPosY=col;
                 }
                 Square square = new Square(type);
                 rowList.add(square);
                 Square backupSquare = new Square(type);
                 backupRowList.add(backupSquare);
+                BoardGame.add(square.getButtonSquare(), col, row);
             }
             gameMatrix.add(rowList);
             backupMatrix.add(backupRowList);
@@ -228,14 +231,23 @@ public class GameController implements Initializable {
 
     @FXML
     public void playRepetition() throws IOException {
-        initialPlayerPosX = 8;
+        initialPlayerPosX = 7; 
         initialPlayerPosY = 4;
+
+        // Verifica que las coordenadas actuales del jugador sean válidas
+        if (playerPosX < 0 || playerPosY < 0) {
+            System.out.println("Error: Invalid player position at the start of playRepetition");
+            playerPosX = initialPlayerPosX;
+            playerPosY = initialPlayerPosY;
+        }
+
         getListSquare(playerPosX, playerPosY).setType(0);
         playerPosX = initialPlayerPosX;
         playerPosY = initialPlayerPosY;
         updatePlayerPosition();
-        
+
         restoreBoard();
+
         PauseTransition pause = new PauseTransition(Duration.millis(750));
         pause.setOnFinished(event -> {
             movesCount--;
@@ -252,6 +264,7 @@ public class GameController implements Initializable {
         });
         pause.play();
     }
+
 
     private void restoreBoard() {
         gameMatrix.clear();
@@ -277,8 +290,7 @@ public class GameController implements Initializable {
         repetition.add(directionY);
     }
 
-    public void setPlayerPosition(int x, int y) {
-
+  public void setPlayerPosition(int x, int y) {
         int directionX = x - playerPosX;
         int directionY = y - playerPosY;
         int newCordX = playerPosX + directionX;
@@ -293,10 +305,14 @@ public class GameController implements Initializable {
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
+           /* if (getListSquare(BoxCordX, BoxCordY).getType() == 1) {
+                band2 = false;
+                System.out.println("entro1");
+            }*/
 
             restoreItem(initialGoalX, initialGoalY, directionX, directionY);
-
-        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
+           
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
@@ -305,15 +321,9 @@ public class GameController implements Initializable {
             band = true;
             updatePlayerPosition();
 
-        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 2 && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY) && isMovePlayer(newCordX, newCordY, directionX, directionY)) {
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 2 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY) && isMovePlayer(newCordX, newCordY, directionX, directionY)) {
             int newBoxCordX = playerPosX + directionX;
             int newBoxCordY = playerPosY + directionY;
-
-
-        int directionX = x - playerPosX, newCordX = directionX + playerPosX;
-        int directionY = y - playerPosY, newCordY = directionY + playerPosY;
-        registerPlayerMove(directionX, directionY);
-        if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
 
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
@@ -329,6 +339,8 @@ public class GameController implements Initializable {
         }
         checkLevelCompletion();
     }
+
+
 
     private boolean isMoveBox(int newCordX, int newCordY, int directionX, int directionY) {
         int newBoxCordX = playerPosX + directionX * 2;
