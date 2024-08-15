@@ -1,7 +1,15 @@
 package com.mycompany.sokovangame;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,8 +23,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -148,7 +158,7 @@ public class StartMenuViewController implements Initializable {
         String itemName = txtItemName.getText();
 
         // Verificar si los campos de texto están llenos y si un personaje ha sido seleccionado
-        if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0) {
+        if (playerName.isEmpty() || itemName.isEmpty() || characterNumber == 0 || level==0) {
             // Mostrar advertencia al usuario
             showAlert("Make sure you fill in the required spaces.");
         } else {
@@ -239,5 +249,71 @@ public class StartMenuViewController implements Initializable {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void loadGameButton(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Saved Game");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        try {
+            Path resourcesPath = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent().resolve("src/main/resources/levelsSaved");
+            File initialDirectory = resourcesPath.toFile();
+            if (initialDirectory.exists()) {
+                fileChooser.setInitialDirectory(initialDirectory);
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+            loadGameFromFile(selectedFile);
+        }
+    }
+    
+   private void loadGameFromFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> mapLines = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null && !line.startsWith("Player Name:")) {
+                mapLines.add(line);
+            }
+            String playerName = line.split(": ")[1].trim();
 
+            String gameNameLine = reader.readLine();
+            String gameName = gameNameLine.split(": ")[1].trim();
+
+            String levelLine = reader.readLine();
+            int level = Integer.parseInt(levelLine.split(": ")[1].trim());
+            
+            String characterNumberLine = reader.readLine();
+            int characterNumber = Integer.parseInt(characterNumberLine.split(": ")[1].trim());
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            Parent gameView = loader.load();
+
+            GameController controller = loader.getController();
+
+            controller.setItemsSavedGame(characterNumber, gameName, playerName, level);
+
+            Stage gameStage = new Stage();
+            gameStage.setTitle("Game");
+            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            gameStage.setResizable(true);
+            gameStage.initModality(Modality.NONE);
+            gameStage.show();
+
+            Stage currentStage = (Stage) txtPlayerName.getScene().getWindow();
+            currentStage.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Load Error");
+            alert.setHeaderText("Failed to Load Game");
+            alert.setContentText("There was an error loading your game.");
+            alert.showAndWait();
+        }
+    }
 }
