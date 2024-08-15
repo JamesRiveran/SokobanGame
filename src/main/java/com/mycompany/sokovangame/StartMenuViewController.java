@@ -1,4 +1,4 @@
-package com.mycompany.sokovangame;
+  package com.mycompany.sokovangame;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,6 +51,8 @@ public class StartMenuViewController implements Initializable {
     private BorderPane mainBorderPane;
     @FXML
     private StackPane stackPane;
+    @FXML
+    private Label txtLevel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -58,6 +60,7 @@ public class StartMenuViewController implements Initializable {
         loadDefaultBackgroundImage();
         // Cargar la imagen de personaje predeterminada
         loadDefaultCharacterImage();
+      //  setLevel();
     }
 
     @FXML
@@ -227,6 +230,8 @@ public class StartMenuViewController implements Initializable {
     public void setItemName(String itemName) {
         this.txtItemName.setText(itemName);
     }
+
+   
 
     public void getLevel(int level) {
         this.level = level;

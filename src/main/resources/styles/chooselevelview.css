@@ -13,7 +13,7 @@
 }
 .text1 {
     
-    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-text-fill: black; /* Color del texto blanco */
     -fx-font-size: 42px; /* Tamaño de la fuente específico para Button2 */
     -fx-background-insets: 0, 0, 2;
     -fx-border-radius: 50%; /* Bordes redondeados */
