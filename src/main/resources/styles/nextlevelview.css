@@ -1,5 +1,5 @@
 .backgroundMain{
-    -fx-background-image: url("../images/i.jpeg");
+    -fx-background-image: url("../images/a.jpg");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
 }
@@ -56,8 +56,8 @@
 }
 
 .Button2 {
-    -fx-background-color: #744E3B; /* Color de fondo específico para Button2 */
-    -fx-text-fill: white; /* Color del texto blanco */
+    -fx-background-color:  #98FB98; /* Color de fondo específico para Button2 */
+    -fx-text-fill: black; /* Color del texto blanco */
     -fx-font-size: 12px; /* Tamaño de la fuente específico para Button2 */
     -fx-background-insets: 0, 0, 2;
     -fx-border-radius: 50%; /* Bordes redondeados */

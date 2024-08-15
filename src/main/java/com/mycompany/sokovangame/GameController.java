@@ -39,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -57,12 +58,12 @@ public class GameController implements Initializable {
     private long lastUpdate = 0;
     private int playerPosX = -1;
     private int playerPosY = -1;
-    int a, b;
     private int initialGoalX;
     private int initialGoalY;
     private Map<Integer, Character> reverseTypeMap;
     private Stack<int[]> boxesOnGoals = new Stack<>();
     boolean band = false;
+
     boolean band2 = true;
     boolean band3 = true;
     private int initialPlayerPosX;
@@ -71,6 +72,7 @@ public class GameController implements Initializable {
     private Queue<Integer> repetition = new ArrayDeque<>();
     private int movesCount = 1;
     private List<List<Square>> backupMatrix = new ArrayList<>();
+
 
     @FXML
     private GridPane BoardGame;
@@ -94,8 +96,7 @@ public class GameController implements Initializable {
             BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
         });
 
-        setItems(5, "asd", "asdasd", 1);//debug
-
+        //setItems(5, "asd", "asdasd", 5);//debug
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
@@ -108,9 +109,6 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        // System.out.println(level);
     }
     private Map<Integer, Integer> levelGoals = Map.of(
             1, 4,
@@ -295,14 +293,10 @@ public class GameController implements Initializable {
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
-           /* if (getListSquare(BoxCordX, BoxCordY).getType() == 1) {
-                band2 = false;
-                System.out.println("entro1");
-            }*/
 
             restoreItem(initialGoalX, initialGoalY, directionX, directionY);
-           
-        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
+
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
@@ -311,7 +305,7 @@ public class GameController implements Initializable {
             band = true;
             updatePlayerPosition();
 
-        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 2 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY) && isMovePlayer(newCordX, newCordY, directionX, directionY)) {
+        } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 2 && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY) && isMovePlayer(newCordX, newCordY, directionX, directionY)) {
             int newBoxCordX = playerPosX + directionX;
             int newBoxCordY = playerPosY + directionY;
 
@@ -394,58 +388,67 @@ public class GameController implements Initializable {
         } else {
             System.out.println("La pila ya está vacía.");
         }
-        //   System.out.println(boxesOnGoals);
     }
 
     private void restoreItem(int initialGoalX, int initialGoalY, int directionX, int directionY) {
         int newBoxCordX = playerPosX + directionX;
         int newBoxCordY = playerPosY + directionY;
         if (band == true) {
-              getListSquare(initialGoalX, initialGoalY).setType(2);
+            getListSquare(initialGoalX, initialGoalY).setType(2);
             band = false;
         }
-        band2 = true;
+        //  band2 = true;
     }
 
     private boolean isLevelCompleted(int currentLevel) {
         int totalGoals = levelGoals.getOrDefault(currentLevel, 0);
-        // System.out.println(boxesOnGoals.size());
+     ///   System.out.println(boxesOnGoals.size());
         return boxesOnGoals.size() == totalGoals;
     }
 
-    private void checkLevelCompletion() {
-        if (isLevelCompleted(level)) {
-            try {
-                // Cargar la vista de ayuda
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
-                Parent nextLevel = loader.load();
+private void checkLevelCompletion() {
+    // System.out.println(level);
 
-                // Crear una nueva escena con la vista de ayuda y establecer el tamaño
-                Scene scene = new Scene(nextLevel, 800, 600);
+    if (isLevelCompleted(level)) {
 
-                // Obtener el controlador y pasarle los datos necesarios
-                NextLevelViewController controller = loader.getController();
+        try {
+            // Cargar la vista de "Next Level"
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
+            Parent nextLevel = loader.load();
+
+            // Crear una nueva escena con la vista de "Next Level" y establecer el tamaño
+            Scene scene = new Scene(nextLevel, 800, 600);
+
+            // Obtener el controlador y pasarle los datos necesarios
+            NextLevelViewController controller = loader.getController();
+            if (level < 5) {
                 controller.setItems(characterNumber, GameName, PlayerName, level); // Pasar el número del personaje
 
-                // Crear una nueva ventana (Stage)
-                Stage stage = new Stage();
-                stage.setTitle("Next Level");
-                stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-                stage.setResizable(false);
-                stage.setScene(scene);  // Asignar la escena con el tamaño especificado
+                // Crear una nueva ventana (Stage) para "Next Level"
+                Stage nextLevelStage = new Stage();
+                nextLevelStage.setTitle("Next Level");
+                nextLevelStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+                nextLevelStage.setResizable(false);
+                nextLevelStage.setScene(scene);  // Asignar la escena con el tamaño especificado
 
                 // Mostrar la nueva ventana
-                stage.show();
+                nextLevelStage.show();
+            } else {
+                showAlert("Levels completed");
 
-                // Cerrar la ventana del juego actual
+                // Obtener el Stage actual (Ventana de juego)
                 Stage currentStage = (Stage) BoardGame.getScene().getWindow();
-                currentStage.close();
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                // Llamar a goToMenu pasando el Stage actual
+                goToMenu(currentStage);
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+}
+
 
     private boolean isValidPosition(int x, int y) {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
@@ -535,6 +538,9 @@ public class GameController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 loadBoard("levels/level" + level + ".txt");
+                while (!boxesOnGoals.isEmpty()) { //vaciar la pila
+                    boxesOnGoals.pop();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -596,4 +602,51 @@ public class GameController implements Initializable {
             BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
         });
     }
+
+    private void showAlert(String message) {
+        try {
+            // Cargar el archivo FXML para la ventana de advertencia
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
+            Parent root = loader.load();
+
+            // Obtener el controlador de la ventana de advertencia
+            AlertDialogController controller = loader.getController();
+            controller.setMessage(message); // Pasar el mensaje de advertencia
+
+            // Crear una nueva ventana (Stage) para la advertencia
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("MESSAGE");
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            stage.setResizable(false);
+            stage.initModality(Modality.NONE); // Bloquea la ventana principal
+            stage.showAndWait(); // Espera a que la ventana de advertencia se cierre
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void goToMenu(Stage currentStage) {
+        try {
+            // Cargar el archivo FXML para la ventana del menú
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            Parent root = loader.load();
+
+            // Crear un nuevo escenario para el menú principal
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root));
+            newStage.setTitle("Menu");
+            newStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            newStage.setResizable(true);
+            newStage.initModality(Modality.NONE);
+            newStage.show();
+
+            // Cerrar el escenario actual (ventana de juego)
+            currentStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
