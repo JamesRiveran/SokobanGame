@@ -6,12 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import model.Square;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -43,7 +47,12 @@ public class GameController implements Initializable {
     private long tiempoAcumulado = 0;//english
     private int playerPosX = -1;
     private int playerPosY = -1;
+    private int initialPlayerPosX;
+    private int initialPlayerPosY;
     private Map<Character, Integer> typeMap;
+    private Queue<Integer> repetition = new ArrayDeque<>();
+    private int movesCount = 1;
+    private List<List<Square>> backupMatrix = new ArrayList<>();
 
     @FXML
     private GridPane BoardGame;
@@ -80,9 +89,10 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         System.out.println(level);
         updatePlayerPosition();
+        //BoardGame
     }
 
     private void initializeTypeMap() {
@@ -106,8 +116,13 @@ public class GameController implements Initializable {
         String line;
         int row = 0;
 
+        gameMatrix.clear();
+        backupMatrix.clear();
+        BoardGame.getChildren().clear();
+
         while ((line = reader.readLine()) != null && row < 10) {
             List<Square> rowList = new ArrayList<>();
+            List<Square> backupRowList = new ArrayList<>();
             for (int col = 0; col < line.length() && col < 10; col++) {
                 char typeChar = line.charAt(col);
                 int type = typeMap.getOrDefault(typeChar, 0);
@@ -117,9 +132,14 @@ public class GameController implements Initializable {
                     playerPosY = col;
                     type = characterNumber;
                 }
-                rowList.add(new Square(type));
+
+                Square square = new Square(type);
+                rowList.add(square);
+                Square backupSquare = new Square(type);
+                backupRowList.add(backupSquare);
             }
             gameMatrix.add(rowList);
+            backupMatrix.add(backupRowList);
             row++;
         }
         for (int i = 0; i < 10; i++) {
@@ -149,16 +169,67 @@ public class GameController implements Initializable {
     public void updatePlayerPosition() {
         txtGameName.setText(GameName);
         txtPlayerName.setText(PlayerName);
-        txtLevel.setText(String.valueOf(level));
-
+        txtLevel.setText(String.valueOf(level));//*
         if (playerPosX >= 0 && playerPosY >= 0) {
             getListSquare(playerPosX, playerPosY).setType(characterNumber);
         }
     }
 
+    @FXML
+    public void playRepetition() throws IOException {
+        initialPlayerPosX = 8;
+        initialPlayerPosY = 4;
+        getListSquare(playerPosX, playerPosY).setType(0);
+        playerPosX = initialPlayerPosX;
+        playerPosY = initialPlayerPosY;
+        updatePlayerPosition();
+        
+        restoreBoard();
+        PauseTransition pause = new PauseTransition(Duration.millis(750));
+        pause.setOnFinished(event -> {
+            movesCount--;
+            if (movesCount == 0) {
+                pause.stop();
+                movesCount += 1;
+                BoardGame.requestFocus();
+                restoreBoard();
+
+            } else {
+                setPlayerPosition(playerPosX + repetition.poll(), playerPosY + repetition.poll());
+                pause.playFromStart();
+            }
+        });
+        pause.play();
+    }
+
+    private void restoreBoard() {
+        gameMatrix.clear();
+        BoardGame.getChildren().clear();
+        for (int i = 0; i < backupMatrix.size(); i++) {
+            List<Square> rowList = new ArrayList<>();
+            for (int j = 0; j < backupMatrix.get(i).size(); j++) {
+                Square backupSquare = backupMatrix.get(i).get(j);
+                Square square = new Square(backupSquare.getType());
+                rowList.add(square);
+            }
+            gameMatrix.add(rowList);
+        }
+        for (int i = 0; i < gameMatrix.size(); i++) {
+            for (int j = 0; j < gameMatrix.get(i).size(); j++) {
+                BoardGame.add(getListSquare(i, j).getButtonSquare(), j, i);
+            }
+        }
+    }
+
+    public void registerPlayerMove(int directionX, int directionY) {
+        repetition.add(directionX);
+        repetition.add(directionY);
+    }
+
     public void setPlayerPosition(int x, int y) {
         int directionX = x - playerPosX, newCordX = directionX + playerPosX;
         int directionY = y - playerPosY, newCordY = directionY + playerPosY;
+        registerPlayerMove(directionX, directionY);
         if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
@@ -175,8 +246,8 @@ public class GameController implements Initializable {
         if (getListSquare(newCordX, newCordY).getType() == 1) {
             if (getListSquare(newBoxCordX, newBoxCordY).getType() != 0 && getListSquare(newBoxCordX, newBoxCordY).getType() != 2) {
                 return false;
-            } else{
-               getListSquare(newBoxCordX, newBoxCordY).setType(1);
+            } else {
+                getListSquare(newBoxCordX, newBoxCordY).setType(1);
             }
         }
         return true;
@@ -187,6 +258,7 @@ public class GameController implements Initializable {
     }
 
     public void keyControls(KeyEvent event) {
+        movesCount++;
         switch (event.getCode()) {
             case W:
                 setPlayerPosition(playerPosX - 1, playerPosY);
@@ -280,7 +352,6 @@ public class GameController implements Initializable {
     private void undoButton(ActionEvent event) {
 
     }
-
 
     @FXML
     private void helpButton(ActionEvent event) {

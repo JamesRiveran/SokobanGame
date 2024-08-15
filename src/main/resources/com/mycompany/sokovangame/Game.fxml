@@ -102,6 +102,7 @@
                         <Insets top="34.0" />
                      </VBox.margin>
                   </Button>
+                  <Button mnemonicParsing="false" onAction="#playRepetition" text="Button" />
                </children>
                <VBox.margin>
                   <Insets bottom="47.0" left="47.0" right="47.0" top="47.0" />
