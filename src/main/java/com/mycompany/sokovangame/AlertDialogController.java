@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ * Click nbfs:
+ * Click nbfs:
  */
 package com.mycompany.sokovangame;
 
@@ -31,14 +31,15 @@ public class AlertDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+
+    }
+
     public void setMessage(String message) {
         txtTexts.setText(message);
     }
+
     private void closeButton(ActionEvent event) {
-        // Cerrar la ventana
+
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -46,10 +47,10 @@ public class AlertDialogController implements Initializable {
 
     @FXML
     private void AcceptButton(ActionEvent event) {
-        // Cerrar la ventana
+
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
-    
+
 }

@@ -13,7 +13,7 @@
    <left>
       <VBox alignment="CENTER" prefHeight="327.0" prefWidth="147.0" style="-fx-background-color: #98FB98;" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="Button3" text="Game Name">
+            <Label styleClass="text1" text="Game Name">
                <VBox.margin>
                   <Insets top="21.0" />
                </VBox.margin></Label>
@@ -22,7 +22,7 @@
                   <Insets left="34.0" right="34.0" />
                </VBox.margin>
             </TextField>
-            <Label styleClass="Button3" text="Player's name" VBox.vgrow="ALWAYS">
+            <Label styleClass="text1" text="Player's name" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets top="24.0" />
                </VBox.margin>
@@ -49,7 +49,7 @@
                   <Font size="1.0" />
                </font>
             </Button>
-            <Button layoutX="27.0" layoutY="161.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="Load Game">
+            <Button layoutX="27.0" layoutY="161.0" mnemonicParsing="false" onAction="#loadGameButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="Load Game">
                <font>
                   <Font size="1.0" />
                </font>
@@ -57,15 +57,7 @@
                   <Insets top="21.0" />
                </VBox.margin>
             </Button>
-            <Button layoutX="27.0" layoutY="164.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="Create your level">
-               <font>
-                  <Font size="1.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="21.0" />
-               </VBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#AboutButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="About">
+            <Button mnemonicParsing="false" onAction="#AboutButton" prefHeight="43.0" prefWidth="114.0" styleClass="Button2" text="About us">
                <font>
                   <Font size="1.0" />
                </font>
@@ -91,9 +83,12 @@
       </VBox>
    </top>
    <center>
-      <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" styleClass="backgroundMain" BorderPane.alignment="CENTER">
+      <StackPane fx:id="stackPane" alignment="BOTTOM_LEFT" prefHeight="150.0" prefWidth="200.0" styleClass="backgroundMain" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#StartGameButton" prefHeight="143.0" prefWidth="231.0" styleClass="Button" text="START GAME " />
+            <Button mnemonicParsing="false" onAction="#StartGameButton" prefHeight="143.0" prefWidth="231.0" styleClass="Button" text="START">
+               <StackPane.margin>
+                  <Insets bottom="12.0" left="12.0" right="12.0" />
+               </StackPane.margin></Button>
          </children>
       </StackPane>
    </center>

@@ -85,21 +85,31 @@
    <right>
       <VBox alignment="CENTER" prefHeight="357.0" prefWidth="193.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #744E3B;" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER" prefHeight="281.0" prefWidth="122.0" style="-fx-background-color: #744E3B;" VBox.vgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" onAction="#resetButton" prefHeight="22.0" prefWidth="66.0" styleClass="Button2" text="RESET">
+                  <Button mnemonicParsing="false" onAction="#mainMenuButton" prefHeight="23.0" prefWidth="91.0" styleClass="Button2" text="MAIN MENU">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#undoButton" prefHeight="23.0" prefWidth="67.0" styleClass="Button2" text="UNDO">
+                  <Button mnemonicParsing="false" onAction="#saveGameButton" prefHeight="23.0" prefWidth="91.0" styleClass="Button2" text="SAVE GAME">
                      <VBox.margin>
-                        <Insets top="34.0" />
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#resetButton" prefHeight="22.0" prefWidth="66.0" styleClass="Button2" text="RESET">
+                     <VBox.margin>
+                        <Insets top="30.0" />
                      </VBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#helpButton" styleClass="Button2" text="HELP">
                      <VBox.margin>
                         <Insets top="34.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#closeButton" prefHeight="22.0" prefWidth="66.0" styleClass="Button2" text="CLOSE">
+                     <VBox.margin>
+                        <Insets top="30.0" />
                      </VBox.margin>
                   </Button>
                </children>

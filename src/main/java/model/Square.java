@@ -15,7 +15,7 @@ public class Square {
     public Square(int type) {
         this.type = type;
         this.buttonSquare = new Button();
-        buttonSquare.setText(this.type+"");
+        // buttonSquare.setText(this.type+""); // Esta línea se elimina o comenta
         updateButtonVisuals();
     }
 
@@ -35,7 +35,6 @@ public class Square {
         }
         buttonSquare.setPrefSize(100, 100);
         buttonSquare.setFocusTraversable(false); // Configura los botones para que no tomen el enfoque
-
     }
 
     public Button getButtonSquare() {
@@ -48,7 +47,7 @@ public class Square {
 
     public void setType(int type) {
         this.type = type;
-        this.buttonSquare.setText(type+"");
+        // this.buttonSquare.setText(type+""); // Esta línea también se elimina o comenta
         updateButtonVisuals();
     }
 }

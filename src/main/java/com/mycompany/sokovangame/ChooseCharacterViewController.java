@@ -23,7 +23,7 @@ public class ChooseCharacterViewController implements Initializable {
     private GameController gameControler;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }
 
     public void initData(String playerName, String itemName, StartMenuViewController startMenuController) {
@@ -63,7 +63,7 @@ public class ChooseCharacterViewController implements Initializable {
     }
 
     private void switchToStartMenu(String characterName, int characterNumber) {
-        // Establecer el personaje seleccionado y regresar al menú de inicio
+        
         startMenuController.setCharacter(characterName, characterNumber);
         startMenuController.setPlayerName(playerName);
         startMenuController.setItemName(itemName);
