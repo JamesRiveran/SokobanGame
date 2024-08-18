@@ -93,10 +93,10 @@ public class GameController implements Initializable {
         setupControls();
 
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
+            BoardGame.requestFocus(); 
         });
 
-        //setItems(5, "asd", "asdasd", 5);//debug
+        //setItems(5, "asd", "asdasd", 5);//debu
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
@@ -129,9 +129,9 @@ public class GameController implements Initializable {
             e.printStackTrace();
         }
 
-        System.out.println(level);
+        
         updatePlayerPosition();
-        //BoardGame
+        
 
     }
 
@@ -214,7 +214,7 @@ public class GameController implements Initializable {
 
         BoardGame.setFocusTraversable(true);
         BoardGame.setOnKeyPressed(this::keyControls);
-        BoardGame.requestFocus(); // Solicitar el enfoque para el GridPane
+        BoardGame.requestFocus(); 
 
     }
 
@@ -229,14 +229,18 @@ public class GameController implements Initializable {
 
     }
 
-    @FXML
-    public void playRepetition() throws IOException {
-        initialPlayerPosX = 7; 
-        initialPlayerPosY = 4;
-
-        // Verifica que las coordenadas actuales del jugador sean válidas
-        if (playerPosX < 0 || playerPosY < 0) {
-            System.out.println("Error: Invalid player position at the start of playRepetition");
+  
+    public void playRepetition(int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY) throws IOException {
+        this.movesCount = movesCount;
+        this.repetition=repetition;
+        this.initialPlayerPosX = initialPlayerPosX; 
+        this.initialPlayerPosY = initialPlayerPosY;
+        if(repetition.isEmpty())
+            
+        
+        
+        if (playerPosX > 0 && playerPosY > 0) {
+            
             playerPosX = initialPlayerPosX;
             playerPosY = initialPlayerPosY;
         }
@@ -250,14 +254,16 @@ public class GameController implements Initializable {
 
         PauseTransition pause = new PauseTransition(Duration.millis(750));
         pause.setOnFinished(event -> {
-            movesCount--;
-            if (movesCount == 0) {
+            this.movesCount--;
+            if (this.movesCount == 0) {
+                
                 pause.stop();
-                movesCount += 1;
+                this.movesCount += 1;
                 BoardGame.requestFocus();
                 restoreBoard();
 
             } else {
+                
                 setPlayerPosition(playerPosX + repetition.poll(), playerPosY + repetition.poll());
                 pause.playFromStart();
             }
@@ -299,17 +305,15 @@ public class GameController implements Initializable {
         int newItemCordY = playerPosY + directionY;
         int BoxCordX = playerPosX + directionX * 2;
         int BoxCordY = playerPosY + directionY * 2;
+        
+        registerPlayerMove(directionX, directionY);
 
         if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 2 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
-           /* if (getListSquare(BoxCordX, BoxCordY).getType() == 1) {
-                band2 = false;
-                System.out.println("entro1");
-            }*/
-
+         
             restoreItem(initialGoalX, initialGoalY, directionX, directionY);
            
         } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
@@ -409,51 +413,43 @@ public class GameController implements Initializable {
             getListSquare(initialGoalX, initialGoalY).setType(2);
             band = false;
         }
-        //  band2 = true;
+        
     }
 
     private boolean isLevelCompleted(int currentLevel) {
         int totalGoals = levelGoals.getOrDefault(currentLevel, 0);
-     ///   System.out.println(boxesOnGoals.size());
+     
         return boxesOnGoals.size() == totalGoals;
     }
 
 private void checkLevelCompletion() {
-    // System.out.println(level);
+    
 
     if (isLevelCompleted(level)) {
 
         try {
-            // Cargar la vista de "Next Level"
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
             Parent nextLevel = loader.load();
 
-            // Crear una nueva escena con la vista de "Next Level" y establecer el tamaño
+            
             Scene scene = new Scene(nextLevel, 800, 600);
 
-            // Obtener el controlador y pasarle los datos necesarios
+            
             NextLevelViewController controller = loader.getController();
-            if (level < 5) {
-                controller.setItems(characterNumber, GameName, PlayerName, level); // Pasar el número del personaje
+           
+                controller.setItems(characterNumber, GameName, PlayerName, level,movesCount,repetition,initialPlayerPosX,initialPlayerPosY,level); 
 
-                // Crear una nueva ventana (Stage) para "Next Level"
+                
                 Stage nextLevelStage = new Stage();
                 nextLevelStage.setTitle("Next Level");
                 nextLevelStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
                 nextLevelStage.setResizable(false);
-                nextLevelStage.setScene(scene);  // Asignar la escena con el tamaño especificado
+                nextLevelStage.setScene(scene);  
 
-                // Mostrar la nueva ventana
+                
                 nextLevelStage.show();
-            } else {
-                showAlert("Levels completed");
-
-                // Obtener el Stage actual (Ventana de juego)
-                Stage currentStage = (Stage) BoardGame.getScene().getWindow();
-
-                // Llamar a goToMenu pasando el Stage actual
-                goToMenu(currentStage);
-            }
+            
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -540,6 +536,7 @@ private void checkLevelCompletion() {
 
     @FXML
     private void resetButton(ActionEvent event) {
+        repetition.clear();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Reset Level Confirmation");
         alert.setHeaderText("Are you sure you want to reset the level?");
@@ -550,7 +547,7 @@ private void checkLevelCompletion() {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 loadBoard("levels/level" + level + ".txt");
-                while (!boxesOnGoals.isEmpty()) { //vaciar la pila
+                while (!boxesOnGoals.isEmpty()) { 
                     boxesOnGoals.pop();
                 }
             } catch (IOException e) {
@@ -590,49 +587,49 @@ private void checkLevelCompletion() {
     @FXML
     private void helpButton(ActionEvent event) {
         try {
-            // Cargar la vista de ayuda
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpView.fxml"));
             Parent helpView = loader.load();
 
-            // Crear una nueva escena con la vista de ayuda
+            
             Scene scene = new Scene(helpView);
 
-            // Crear una nueva ventana (Stage)
+            
             Stage stage = new Stage();
             stage.setTitle("Help");
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             stage.setResizable(false);
             stage.setScene(scene);
 
-            // Mostrar la nueva ventana
+            
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); // Solicita el enfoque para el GridPane después de que la vista se cargue
+            BoardGame.requestFocus(); 
         });
     }
 
     private void showAlert(String message) {
         try {
-            // Cargar el archivo FXML para la ventana de advertencia
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
             Parent root = loader.load();
 
-            // Obtener el controlador de la ventana de advertencia
+            
             AlertDialogController controller = loader.getController();
-            controller.setMessage(message); // Pasar el mensaje de advertencia
+            controller.setMessage(message); 
 
-            // Crear una nueva ventana (Stage) para la advertencia
+            
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("MESSAGE");
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             stage.setResizable(false);
-            stage.initModality(Modality.NONE); // Bloquea la ventana principal
-            stage.showAndWait(); // Espera a que la ventana de advertencia se cierre
+            stage.initModality(Modality.NONE); 
+            stage.showAndWait(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -640,11 +637,11 @@ private void checkLevelCompletion() {
 
     private void goToMenu(Stage currentStage) {
         try {
-            // Cargar el archivo FXML para la ventana del menú
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
             Parent root = loader.load();
 
-            // Crear un nuevo escenario para el menú principal
+            
             Stage newStage = new Stage();
             newStage.setScene(new Scene(root));
             newStage.setTitle("Menu");
@@ -653,7 +650,7 @@ private void checkLevelCompletion() {
             newStage.initModality(Modality.NONE);
             newStage.show();
 
-            // Cerrar el escenario actual (ventana de juego)
+            
             currentStage.close();
 
         } catch (IOException e) {
