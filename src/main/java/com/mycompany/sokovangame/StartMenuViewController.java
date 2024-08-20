@@ -135,7 +135,7 @@ public class StartMenuViewController implements Initializable {
     }
 
     @FXML
-    private void StartGameButton(ActionEvent event) throws IOException {
+    private void StartGameButton(ActionEvent event) throws IOException, URISyntaxException {
         String playerName = txtPlayerName.getText();
         String itemName = txtItemName.getText();
 
@@ -222,7 +222,7 @@ public class StartMenuViewController implements Initializable {
     }
 
     @FXML
-    private void loadGameButton(ActionEvent event) {
+    private void loadGameButton(ActionEvent event) throws URISyntaxException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Saved Game");
         fileChooser.getExtensionFilters().add(
@@ -243,7 +243,7 @@ public class StartMenuViewController implements Initializable {
         }
     }
 
-    private void loadGameFromFile(File file) {
+    private void loadGameFromFile(File file) throws URISyntaxException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             List<String> mapLines = new ArrayList<>();
             String line;

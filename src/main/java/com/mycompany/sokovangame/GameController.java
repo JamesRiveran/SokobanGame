@@ -3,6 +3,7 @@ package com.mycompany.sokovangame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,7 +100,7 @@ public class GameController implements Initializable {
         //setItems(5, "asd", "asdasd", 5);//debu
     }
 
-    public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
+    public void setItems(int characterNumber, String GameName, String PlayerName, int level) throws URISyntaxException {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
@@ -118,7 +119,7 @@ public class GameController implements Initializable {
             5, 7
     );
 
-    public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) {
+    public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) throws URISyntaxException {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
@@ -153,49 +154,71 @@ public class GameController implements Initializable {
         reverseTypeMap.put(4, '!');
     }
 
-    private void loadBoard(String resourcePath) throws IOException {
+   private void loadBoard(String resourcePath) throws IOException, URISyntaxException {
         BoardGame.getChildren().clear();
         gameMatrix.clear();
 
-        InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
-        if (is == null) {
+        Path resourceRoot = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent();
+        Path filePath = resourceRoot.resolve("src/main/resources/" + resourcePath);
+        File file = filePath.toFile();
+
+        if (!file.exists()) {
             throw new IOException("Resource not found: " + resourcePath);
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        int row = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int row = 0;
 
-        gameMatrix.clear();
-        backupMatrix.clear();
-        BoardGame.getChildren().clear();
+            gameMatrix.clear();
+            backupMatrix.clear();
+            BoardGame.getChildren().clear();
 
-        while ((line = reader.readLine()) != null && row < 10) {
-            List<Square> rowList = new ArrayList<>();
-            List<Square> backupRowList = new ArrayList<>();
-            for (int col = 0; col < line.length() && col < 10; col++) {
-                char typeChar = line.charAt(col);
-                int type = typeMap.getOrDefault(typeChar, 0);
+            while ((line = reader.readLine()) != null && row < 10) {
+                List<Square> rowList = new ArrayList<>();
+                List<Square> backupRowList = new ArrayList<>();
+                for (int col = 0; col < line.length() && col < 10; col++) {
+                    char typeChar = line.charAt(col);
+                    int type = typeMap.getOrDefault(typeChar, 0);
 
-                if (typeChar == '@') {
-                    playerPosX = row;
-                    playerPosY = col;
-                    type = characterNumber;
-                    initialPlayerPosX=row;
-                    initialPlayerPosY=col;
+                    if (typeChar == '@') {
+                        playerPosX = row;
+                        playerPosY = col;
+                        type = characterNumber;
+                        initialPlayerPosX = row;
+                        initialPlayerPosY = col;
+                    }
+                    Square square = new Square(type);
+                    rowList.add(square);
+                    Square backupSquare = new Square(type);
+                    backupRowList.add(backupSquare);
+                    BoardGame.add(square.getButtonSquare(), col, row);
                 }
-                Square square = new Square(type);
-                rowList.add(square);
-                Square backupSquare = new Square(type);
-                backupRowList.add(backupSquare);
-                BoardGame.add(square.getButtonSquare(), col, row);
+                gameMatrix.add(rowList);
+                backupMatrix.add(backupRowList);
+                row++;
             }
-            gameMatrix.add(rowList);
-            backupMatrix.add(backupRowList);
-            row++;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Boxes on Goals:")) {
+                    int boxesOnGoalsCount = Integer.parseInt(line.split(": ")[1].trim());
+                    for (int i = 0; i < boxesOnGoalsCount; i++) {
+                        boxesOnGoals.push(new int[]{0, 0});
+                    }
+                }
+                else if (line.startsWith("Repetition: ")) {
+                    repetition.clear();
+                    String[] moves = line.substring(12).trim().split(" ");
+                    for (String move : moves) {
+                        repetition.add(Integer.parseInt(move));
+                    }
+                }
+            }
+
+            updatePlayerPosition();
+            checkLevelCompletion();
+            BoardGame.requestFocus();
         }
-        updatePlayerPosition();
-        BoardGame.requestFocus();
     }
 
     public Square getListSquare(int i, int j) {
@@ -422,40 +445,31 @@ public class GameController implements Initializable {
         return boxesOnGoals.size() == totalGoals;
     }
 
-private void checkLevelCompletion() {
-    
+    private void checkLevelCompletion() {
+        if (isLevelCompleted(level)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
+                Parent nextLevel = loader.load();
 
-    if (isLevelCompleted(level)) {
+                Scene scene = new Scene(nextLevel, 800, 600);
 
-        try {
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
-            Parent nextLevel = loader.load();
+                NextLevelViewController controller = loader.getController();
+                controller.setItems(characterNumber, GameName, PlayerName, level, movesCount, repetition, initialPlayerPosX, initialPlayerPosY, level);
 
-            
-            Scene scene = new Scene(nextLevel, 800, 600);
-
-            
-            NextLevelViewController controller = loader.getController();
-           
-                controller.setItems(characterNumber, GameName, PlayerName, level,movesCount,repetition,initialPlayerPosX,initialPlayerPosY,level); 
-
-                
                 Stage nextLevelStage = new Stage();
                 nextLevelStage.setTitle("Next Level");
                 nextLevelStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
                 nextLevelStage.setResizable(false);
-                nextLevelStage.setScene(scene);  
+                nextLevelStage.setScene(scene);
 
-                
                 nextLevelStage.show();
-            
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
+
 
 
     private boolean isValidPosition(int x, int y) {
@@ -483,7 +497,7 @@ private void checkLevelCompletion() {
         }
     }
 
-    @FXML
+   @FXML
     private void saveGameButton(ActionEvent event) {
         try {
             Path resourceRoot = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent();
@@ -517,6 +531,15 @@ private void checkLevelCompletion() {
                 writer.write("Level: " + level);
                 writer.newLine();
                 writer.write("Character Number: " + characterNumber);
+                writer.newLine();
+                writer.write("Boxes on Goals: " + boxesOnGoals.size());
+
+                // Guardar la secuencia de movimientos
+                writer.newLine();
+                writer.write("Repetition: ");
+                for (Integer move : repetition) {
+                    writer.write(move + " ");
+                }
                 writer.flush();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Game Saved");
@@ -534,8 +557,10 @@ private void checkLevelCompletion() {
         }
     }
 
+
+
     @FXML
-    private void resetButton(ActionEvent event) {
+    private void resetButton(ActionEvent event) throws URISyntaxException {
         repetition.clear();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Reset Level Confirmation");
@@ -657,5 +682,4 @@ private void checkLevelCompletion() {
             e.printStackTrace();
         }
     }
-
 }

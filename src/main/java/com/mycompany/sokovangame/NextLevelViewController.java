@@ -5,6 +5,7 @@
 package com.mycompany.sokovangame;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -48,7 +49,7 @@ public class NextLevelViewController implements Initializable {
     }
 
     @FXML
-    private void reviewButton(ActionEvent event) {
+    private void reviewButton(ActionEvent event) throws URISyntaxException {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
@@ -85,7 +86,7 @@ public class NextLevelViewController implements Initializable {
     }
 
     @FXML
-    private void goNextLevelButton(ActionEvent event) throws IOException {
+    private void goNextLevelButton(ActionEvent event) throws IOException, URISyntaxException {
 
         if (level < 5) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
@@ -105,7 +106,7 @@ public class NextLevelViewController implements Initializable {
             Stage currentStage = (Stage) txt.getScene().getWindow();
             currentStage.close();
         } else {
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
             Parent gameView = loader.load();
 
             StartMenuViewController controller = loader.getController();
