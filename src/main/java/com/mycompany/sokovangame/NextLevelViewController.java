@@ -1,7 +1,3 @@
-/*
- * Click nbfs:
- * Click nbfs:
- */
 package com.mycompany.sokovangame;
 
 import java.io.IOException;
@@ -15,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -30,12 +27,16 @@ public class NextLevelViewController implements Initializable {
     private int characterNumber;
     private String itemName;
     private String playerName;
+    private String message;
     private int level;
     private int movesCount;
     private Queue<Integer> repetition = new ArrayDeque<>();
     int initialPlayerPosX;
     int initialPlayerPosY;
-    int nextLevel;
+    @FXML
+    private Label txtMessage;
+    @FXML
+    private Button btnGoNextLevel;
     @FXML
     private Label txt;
 
@@ -44,32 +45,14 @@ public class NextLevelViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        // Inicialización
     }
 
-    @FXML
-    private void reviewButton(ActionEvent event) {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
-            Parent gameView = loader.load();
-
-            GameController controller = loader.getController();
-
-            controller.setItems(characterNumber, itemName, playerName, level);
-            controller.playRepetition(movesCount, repetition, initialPlayerPosX, initialPlayerPosY);
-
-            Stage gameStage = new Stage();
-            gameStage.setTitle("Game");
-            gameStage.setScene(new Scene(gameView, 800, 600));
-            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-            gameStage.setResizable(true);
-            gameStage.initModality(Modality.NONE);
-            gameStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setMessage(String messageText,String messageButton) {
+        System.out.println(messageText);
+        System.out.println(messageButton);
+        txtMessage.setText(messageText);
+        btnGoNextLevel.setText(messageButton);
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level, int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY, int nextLevel) {
@@ -81,18 +64,18 @@ public class NextLevelViewController implements Initializable {
         this.repetition = repetition;
         this.initialPlayerPosX = initialPlayerPosX;
         this.initialPlayerPosY = initialPlayerPosY;
-
+        this.message = message;
     }
 
     @FXML
-    private void goNextLevelButton(ActionEvent event) throws IOException {
-
-        if (level < 5) {
+    private void reviewButton(ActionEvent event) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
             GameController controller = loader.getController();
-            controller.setItems(characterNumber, itemName, playerName, level + 1);
+            controller.setItems(characterNumber, itemName, playerName, level);
+            controller.playRepetition(movesCount, repetition, initialPlayerPosX, initialPlayerPosY);
 
             Stage gameStage = new Stage();
             gameStage.setTitle("Game");
@@ -102,26 +85,48 @@ public class NextLevelViewController implements Initializable {
             gameStage.initModality(Modality.NONE);
             gameStage.show();
 
-            Stage currentStage = (Stage) txt.getScene().getWindow();
+            // Cerrar la ventana actual
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
             currentStage.close();
-        } else {
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
-            Parent gameView = loader.load();
-
-            StartMenuViewController controller = loader.getController();
-
-
-            Stage gameStage = new Stage();
-            gameStage.setTitle("Menu");
-            gameStage.setScene(new Scene(gameView, 800, 600));
-            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-            gameStage.setResizable(true);
-            gameStage.initModality(Modality.NONE);
-            gameStage.show();
-
-            Stage currentStage = (Stage) txt.getScene().getWindow();
-            currentStage.close();  
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+@FXML
+private void goNextLevelButton(ActionEvent event) {
+    try {
+        FXMLLoader loader;
+        Parent view;
+
+        if (level < 5) {
+            loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            view = loader.load();
+
+            GameController controller = loader.getController();
+            controller.setItems(characterNumber, itemName, playerName, level + 1);
+
+        } else {
+            loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            view = loader.load();
+        }
+
+        Stage stage = new Stage();
+        stage.setTitle("Game");
+        stage.setScene(new Scene(view, 800, 600));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+        stage.setResizable(true);
+        stage.initModality(Modality.NONE);
+        stage.show();
+
+        // Cerrar la ventana actual
+        Stage currentStage = (Stage) txtMessage.getScene().getWindow();
+        currentStage.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 
 }

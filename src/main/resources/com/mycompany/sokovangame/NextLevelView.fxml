@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="backgroundMain" stylesheets="@../../../styles/nextlevelview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.NextLevelViewController">
    <children>
@@ -15,7 +16,10 @@
                <children>
                   <Label fx:id="txt" />
                   <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="421.0" styleClass="text1" text="Congratulations" />
-                  <Label styleClass="text2" text="you have gone to the next level, choose" />
+                  <Label fx:id="txtMessage" alignment="CENTER" prefHeight="27.0" prefWidth="358.0" styleClass="text2" textFill="WHITE">
+                     <font>
+                        <Font size="22.0" />
+                     </font></Label>
                   <Label styleClass="text2" text="which option you want to do" />
                </children>
                <VBox.margin>
@@ -37,7 +41,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#goNextLevelButton" prefHeight="65.0" prefWidth="139.0" styleClass="Button2" text="GO NEXT LEVEL" />
+                                          <Button fx:id="btnGoNextLevel" mnemonicParsing="false" onAction="#goNextLevelButton" prefHeight="65.0" prefWidth="139.0" styleClass="Button2" />
                                        </children>
                                     </VBox>
                                  </children>

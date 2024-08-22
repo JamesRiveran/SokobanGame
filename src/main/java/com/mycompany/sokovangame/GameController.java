@@ -60,19 +60,19 @@ public class GameController implements Initializable {
     private int playerPosY = -1;
     private int initialGoalX;
     private int initialGoalY;
+    private String message;
     private Map<Integer, Character> reverseTypeMap;
     private Stack<int[]> boxesOnGoals = new Stack<>();
     boolean band = false;
-
-    boolean band2 = true;
-    boolean band3 = true;
+    boolean band2 = false;
     private int initialPlayerPosX;
     private int initialPlayerPosY;
     private Map<Character, Integer> typeMap;
     private Queue<Integer> repetition = new ArrayDeque<>();
     private int movesCount = 1;
     private List<List<Square>> backupMatrix = new ArrayList<>();
-
+    private String messageText = "";
+    private String messageButton = "";
 
     @FXML
     private GridPane BoardGame;
@@ -96,7 +96,7 @@ public class GameController implements Initializable {
             BoardGame.requestFocus(); 
         });
 
-        //setItems(5, "asd", "asdasd", 5);//debu
+        setItems(5, "asd", "asdasd", 5);//debu
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
@@ -341,7 +341,7 @@ public class GameController implements Initializable {
 
             System.out.println("Cannot move there!");
         }
-        checkLevelCompletion();
+        checkLevelCompletion(messageText,messageButton);
     }
 
 
@@ -422,8 +422,8 @@ public class GameController implements Initializable {
         return boxesOnGoals.size() == totalGoals;
     }
 
-private void checkLevelCompletion() {
-    
+private void checkLevelCompletion(String messageText,String messageButton) {
+  
 
     if (isLevelCompleted(level)) {
 
@@ -437,9 +437,13 @@ private void checkLevelCompletion() {
 
             
             NextLevelViewController controller = loader.getController();
-           
-                controller.setItems(characterNumber, GameName, PlayerName, level,movesCount,repetition,initialPlayerPosX,initialPlayerPosY,level); 
-
+                if(level<5){
+                    
+                    controller.setMessage("You passed the level", "NEXT LEVEL");
+                }else{
+                     controller.setMessage("You passed all the levels", "GO TO MENU");
+                 }    
+                controller.setItems(characterNumber, GameName, PlayerName, level,movesCount,repetition,initialPlayerPosX,initialPlayerPosY,level);   
                 
                 Stage nextLevelStage = new Stage();
                 nextLevelStage.setTitle("Next Level");
@@ -456,6 +460,7 @@ private void checkLevelCompletion() {
         }
     }
 }
+
 
 
     private boolean isValidPosition(int x, int y) {
@@ -612,24 +617,16 @@ private void checkLevelCompletion() {
         });
     }
 
-    private void showAlert(String message) {
+    private void showMessage(String messageText,String messageButton) {
         try {
             
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
             Parent root = loader.load();
 
             
-            AlertDialogController controller = loader.getController();
-            controller.setMessage(message); 
+            NextLevelViewController controller = loader.getController();
+            controller.setMessage(messageText, messageButton); 
 
-            
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("MESSAGE");
-            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-            stage.setResizable(false);
-            stage.initModality(Modality.NONE); 
-            stage.showAndWait(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
