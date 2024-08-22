@@ -252,7 +252,7 @@ public class GameController implements Initializable {
 
         restoreBoard();
 
-        PauseTransition pause = new PauseTransition(Duration.millis(750));
+        PauseTransition pause = new PauseTransition(Duration.millis(400));
         pause.setOnFinished(event -> {
             this.movesCount--;
             if (this.movesCount == 0) {
@@ -428,7 +428,7 @@ private void checkLevelCompletion() {
     if (isLevelCompleted(level)) {
 
         try {
-            
+             Stage currentStage = (Stage) BoardGame.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
             Parent nextLevel = loader.load();
 
@@ -449,7 +449,7 @@ private void checkLevelCompletion() {
 
                 
                 nextLevelStage.show();
-            
+                currentStage.close();
 
         } catch (IOException e) {
             e.printStackTrace();
