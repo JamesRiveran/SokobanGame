@@ -183,14 +183,19 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private void AboutButton(ActionEvent event) {
         try {
-            showStartMenu();
+            showStartMenu(); 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AboutUs.fxml"));
             Parent aboutUsView = loader.load();
+
+            AboutUsController aboutUsController = loader.getController();
+            aboutUsController.setStartMenuController(this);
+
             stackPane.getChildren().add(aboutUsView);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void setPlayerName(String playerName) {
         this.txtPlayerName.setText(playerName);
@@ -220,7 +225,7 @@ public class StartMenuViewController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     private void loadGameButton(ActionEvent event) throws URISyntaxException {
         FileChooser fileChooser = new FileChooser();

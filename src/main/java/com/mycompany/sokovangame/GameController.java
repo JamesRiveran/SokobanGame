@@ -546,6 +546,7 @@ public class GameController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Your game has been saved successfully!");
                 alert.showAndWait();
+                BoardGame.requestFocus();
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -579,6 +580,7 @@ public class GameController implements Initializable {
                 e.printStackTrace();
             }
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
@@ -595,6 +597,7 @@ public class GameController implements Initializable {
             Scene currentScene = ((Node) event.getSource()).getScene();
             currentScene.setRoot(startMenuView);
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
@@ -607,6 +610,7 @@ public class GameController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Platform.exit();
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
