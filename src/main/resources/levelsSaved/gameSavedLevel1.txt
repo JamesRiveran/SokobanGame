@@ -1,6 +1,7 @@
 ######
 #    #####
 <<<<<<< HEAD
+<<<<<<< HEAD
 # $  $   #
 #        #
 #.   @ . #
@@ -35,3 +36,18 @@ Repetition: 0 1 0 1 -1 0 -1 0 0 -1 -1 0 -1 0 -1 0 0 -1 1 0 0 -1 0 -1 -1 0 -1 0 0
 Initial position: 7,5
 Moves Count: 33
 >>>>>>> fixes
+=======
+# $      #
+#        #
+#.     ! #
+#        #
+#@       #
+#!  !    #
+#####    #
+    ######
+
+Player Name: asd
+Game Name: asd
+Level: 1
+Character Number: 5
+>>>>>>> origin/windowFixes

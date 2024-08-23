@@ -51,7 +51,7 @@ public class NextLevelViewController implements Initializable {
     @FXML
     private void reviewButton(ActionEvent event) throws URISyntaxException {
         try {
-
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
@@ -66,6 +66,8 @@ public class NextLevelViewController implements Initializable {
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
             gameStage.initModality(Modality.NONE);
+            
+            currentStage.close();
             gameStage.show();
 
         } catch (IOException e) {
@@ -90,6 +92,7 @@ public class NextLevelViewController implements Initializable {
     private void goNextLevelButton(ActionEvent event) throws IOException, URISyntaxException {
 
         if (level < 5) {
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
