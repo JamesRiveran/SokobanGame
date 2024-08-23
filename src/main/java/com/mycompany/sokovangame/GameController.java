@@ -3,10 +3,9 @@ package com.mycompany.sokovangame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import model.Square;
 import java.net.URL;
@@ -15,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,25 +52,22 @@ public class GameController implements Initializable {
     private String GameName;
     private String PlayerName;
     private int level;
-    private AnimationTimer timer;
-    private long lastUpdate = 0;
     private int playerPosX = -1;
     private int playerPosY = -1;
     private int initialGoalX;
     private int initialGoalY;
+    private String message;
     private Map<Integer, Character> reverseTypeMap;
     private Stack<int[]> boxesOnGoals = new Stack<>();
     boolean band = false;
-
-    boolean band2 = true;
-    boolean band3 = true;
     private int initialPlayerPosX;
     private int initialPlayerPosY;
     private Map<Character, Integer> typeMap;
     private Queue<Integer> repetition = new ArrayDeque<>();
     private int movesCount = 1;
     private List<List<Square>> backupMatrix = new ArrayList<>();
-
+    private String messageText = "";
+    private String messageButton = "";
 
     @FXML
     private GridPane BoardGame;
@@ -81,8 +76,6 @@ public class GameController implements Initializable {
     private Label txtGameName;
     @FXML
     private Label txtPlayerName;
-    @FXML
-    private Label txtCronometer;
     @FXML
     private Label txtLevel;
 
@@ -93,19 +86,17 @@ public class GameController implements Initializable {
         setupControls();
 
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); 
+            BoardGame.requestFocus();
         });
-
-        //setItems(5, "asd", "asdasd", 5);//debu
     }
 
-    public void setItems(int characterNumber, String GameName, String PlayerName, int level) {
+    public void setItems(int characterNumber, String GameName, String PlayerName, int level) throws URISyntaxException {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
         this.level = level;
         try {
-            loadBoard("levels/level" + level + ".txt");
+            loadBoard("levels/level" + level + ".txt", false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,20 +109,19 @@ public class GameController implements Initializable {
             5, 7
     );
 
-    public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) {
+    public void setItemsSavedGame(int characterNumber, String GameName, String PlayerName, int level) throws URISyntaxException {
         this.characterNumber = characterNumber;
         this.GameName = GameName;
         this.PlayerName = PlayerName;
         this.level = level;
+        
         try {
-            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt");
+            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        
         updatePlayerPosition();
-        
 
     }
 
@@ -153,49 +143,80 @@ public class GameController implements Initializable {
         reverseTypeMap.put(4, '!');
     }
 
-    private void loadBoard(String resourcePath) throws IOException {
+    private void loadBoard(String resourcePath, Boolean isSaved) throws IOException, URISyntaxException {
         BoardGame.getChildren().clear();
         gameMatrix.clear();
 
-        InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
-        if (is == null) {
+        Path resourceRoot = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent();
+        Path filePath = resourceRoot.resolve("src/main/resources/" + resourcePath);
+        File file = filePath.toFile();
+
+        if (!file.exists()) {
             throw new IOException("Resource not found: " + resourcePath);
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        int row = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int row = 0;
 
-        gameMatrix.clear();
-        backupMatrix.clear();
-        BoardGame.getChildren().clear();
+            gameMatrix.clear();
+            backupMatrix.clear();
+            BoardGame.getChildren().clear();
 
-        while ((line = reader.readLine()) != null && row < 10) {
-            List<Square> rowList = new ArrayList<>();
-            List<Square> backupRowList = new ArrayList<>();
-            for (int col = 0; col < line.length() && col < 10; col++) {
-                char typeChar = line.charAt(col);
-                int type = typeMap.getOrDefault(typeChar, 0);
+            while ((line = reader.readLine()) != null && row < 10) {
+                List<Square> rowList = new ArrayList<>();
+                List<Square> backupRowList = new ArrayList<>();
+                for (int col = 0; col < line.length() && col < 10; col++) {
+                    char typeChar = line.charAt(col);
+                    int type = typeMap.getOrDefault(typeChar, 0);
 
-                if (typeChar == '@') {
-                    playerPosX = row;
-                    playerPosY = col;
-                    type = characterNumber;
-                    initialPlayerPosX=row;
-                    initialPlayerPosY=col;
+                    if (typeChar == '@') {
+                        playerPosX = row;
+                        playerPosY = col;
+                        type = characterNumber;
+                        initialPlayerPosX = row;
+                        initialPlayerPosY = col;
+                    }
+                    Square square = new Square(type);
+                    rowList.add(square);
+                    Square backupSquare = new Square(type);
+                    backupRowList.add(backupSquare);
+                    BoardGame.add(square.getButtonSquare(), col, row);
                 }
-                Square square = new Square(type);
-                rowList.add(square);
-                Square backupSquare = new Square(type);
-                backupRowList.add(backupSquare);
-                BoardGame.add(square.getButtonSquare(), col, row);
+                gameMatrix.add(rowList);
+                backupMatrix.add(backupRowList);
+                row++;
             }
-            gameMatrix.add(rowList);
-            backupMatrix.add(backupRowList);
-            row++;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Boxes on Goals:")) {
+                    int boxesOnGoalsCount = Integer.parseInt(line.split(": ")[1].trim());
+                    for (int i = 0; i < boxesOnGoalsCount; i++) {
+                        boxesOnGoals.push(new int[]{0, 0});
+                    }
+                } else if (line.startsWith("Repetition: ")) {
+                    repetition.clear();
+                    String[] moves = line.substring(12).trim().split(" ");
+                    for (String move : moves) {
+                        repetition.add(Integer.parseInt(move));
+                    }
+                }
+                if (line.startsWith("Initial position: ") && isSaved) {
+                    String[] positions = line.split(": ")[1].trim().split(",");
+                    int savedPlayerPosX = Integer.parseInt(positions[0].trim());
+                    int savedPlayerPosY = Integer.parseInt(positions[1].trim());
+                    initialPlayerPosX = savedPlayerPosX;
+                    initialPlayerPosY = savedPlayerPosY;
+                    System.out.println(initialPlayerPosX + "asdasd" + initialPlayerPosY);
+                }
+                if (line.startsWith("Moves Count: ") && isSaved) {
+                movesCount = Integer.parseInt(line.split(": ")[1].trim());
+                }
+            }
+            updatePlayerPosition();
+            checkLevelCompletion(messageText, messageButton);
+            BoardGame.requestFocus();
         }
-        updatePlayerPosition();
-        BoardGame.requestFocus();
     }
 
     public Square getListSquare(int i, int j) {
@@ -214,7 +235,7 @@ public class GameController implements Initializable {
 
         BoardGame.setFocusTraversable(true);
         BoardGame.setOnKeyPressed(this::keyControls);
-        BoardGame.requestFocus(); 
+        BoardGame.requestFocus();
 
     }
 
@@ -229,20 +250,17 @@ public class GameController implements Initializable {
 
     }
 
-  
     public void playRepetition(int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY) throws IOException {
         this.movesCount = movesCount;
-        this.repetition=repetition;
-        this.initialPlayerPosX = initialPlayerPosX; 
+        this.repetition = repetition;
+        this.initialPlayerPosX = initialPlayerPosX;
         this.initialPlayerPosY = initialPlayerPosY;
-        if(repetition.isEmpty())
-            
-        
-        
-        if (playerPosX > 0 && playerPosY > 0) {
-            
-            playerPosX = initialPlayerPosX;
-            playerPosY = initialPlayerPosY;
+        if (repetition.isEmpty()) {
+            if (playerPosX > 0 && playerPosY > 0) {
+
+                playerPosX = initialPlayerPosX;
+                playerPosY = initialPlayerPosY;
+            }
         }
 
         getListSquare(playerPosX, playerPosY).setType(0);
@@ -252,25 +270,24 @@ public class GameController implements Initializable {
 
         restoreBoard();
 
-        PauseTransition pause = new PauseTransition(Duration.millis(750));
+        PauseTransition pause = new PauseTransition(Duration.millis(400));
         pause.setOnFinished(event -> {
             this.movesCount--;
             if (this.movesCount == 0) {
-                
+
                 pause.stop();
                 this.movesCount += 1;
                 BoardGame.requestFocus();
                 restoreBoard();
 
             } else {
-                
+
                 setPlayerPosition(playerPosX + repetition.poll(), playerPosY + repetition.poll());
                 pause.playFromStart();
             }
         });
         pause.play();
     }
-
 
     private void restoreBoard() {
         gameMatrix.clear();
@@ -296,7 +313,7 @@ public class GameController implements Initializable {
         repetition.add(directionY);
     }
 
-  public void setPlayerPosition(int x, int y) {
+    public void setPlayerPosition(int x, int y) {
         int directionX = x - playerPosX;
         int directionY = y - playerPosY;
         int newCordX = playerPosX + directionX;
@@ -305,7 +322,6 @@ public class GameController implements Initializable {
         int newItemCordY = playerPosY + directionY;
         int BoxCordX = playerPosX + directionX * 2;
         int BoxCordY = playerPosY + directionY * 2;
-        
         registerPlayerMove(directionX, directionY);
 
         if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 2 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
@@ -313,9 +329,9 @@ public class GameController implements Initializable {
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
-         
+
             restoreItem(initialGoalX, initialGoalY, directionX, directionY);
-           
+
         } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
@@ -341,10 +357,8 @@ public class GameController implements Initializable {
 
             System.out.println("Cannot move there!");
         }
-        checkLevelCompletion();
+        checkLevelCompletion(messageText, messageButton);
     }
-
-
 
     private boolean isMoveBox(int newCordX, int newCordY, int directionX, int directionY) {
         int newBoxCordX = playerPosX + directionX * 2;
@@ -401,8 +415,6 @@ public class GameController implements Initializable {
 
         if (!boxesOnGoals.isEmpty()) {
             boxesOnGoals.pop();
-        } else {
-            System.out.println("La pila ya está vacía.");
         }
     }
 
@@ -413,50 +425,44 @@ public class GameController implements Initializable {
             getListSquare(initialGoalX, initialGoalY).setType(2);
             band = false;
         }
-        
     }
-
+    
     private boolean isLevelCompleted(int currentLevel) {
         int totalGoals = levelGoals.getOrDefault(currentLevel, 0);
-     
+
         return boxesOnGoals.size() == totalGoals;
     }
 
-private void checkLevelCompletion() {
-    
+    private void checkLevelCompletion(String messageText, String messageButton) {
+        if (isLevelCompleted(level)) {
+            try {
+                Stage currentStage = (Stage) BoardGame.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
+                Parent nextLevel = loader.load();
 
-    if (isLevelCompleted(level)) {
+                Scene scene = new Scene(nextLevel, 800, 600);
 
-        try {
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("NextLevelView.fxml"));
-            Parent nextLevel = loader.load();
-
-            
-            Scene scene = new Scene(nextLevel, 800, 600);
-
-            
-            NextLevelViewController controller = loader.getController();
-           
-                controller.setItems(characterNumber, GameName, PlayerName, level,movesCount,repetition,initialPlayerPosX,initialPlayerPosY,level); 
-
-                
+                NextLevelViewController controller = loader.getController();
+                if (level < 5) {
+                    controller.setMessage("You passed level", "NEXT LEVEL");
+                } else {
+                    controller.setMessage("You passed all levels", "GO TO MENU");
+                }
+                controller.setItems(characterNumber, GameName, PlayerName, level, movesCount, repetition, initialPlayerPosX, initialPlayerPosY, level);
                 Stage nextLevelStage = new Stage();
                 nextLevelStage.setTitle("Next Level");
                 nextLevelStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
                 nextLevelStage.setResizable(false);
-                nextLevelStage.setScene(scene);  
+                nextLevelStage.setScene(scene);
 
-                
                 nextLevelStage.show();
-            
+                currentStage.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
-
 
     private boolean isValidPosition(int x, int y) {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
@@ -517,12 +523,22 @@ private void checkLevelCompletion() {
                 writer.write("Level: " + level);
                 writer.newLine();
                 writer.write("Character Number: " + characterNumber);
+                writer.newLine();
+                writer.write("Boxes on Goals: " + boxesOnGoals.size());
+
+                // Guardar la secuencia de movimientos
+                writer.newLine();
+                writer.write("Repetition: ");
+                for (Integer move : repetition) {
+                    writer.write(move + " ");
+                }
+                writer.newLine();
+                writer.write("Initial position: " + initialPlayerPosX + "," + initialPlayerPosY);
+                writer.newLine();
+                writer.write("Moves Count: " + movesCount);
                 writer.flush();
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Game Saved");
-                alert.setHeaderText(null);
-                alert.setContentText("Your game has been saved successfully!");
-                alert.showAndWait();
+                showAlert("Your game has been saved successfully!");
+                BoardGame.requestFocus();
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -535,7 +551,7 @@ private void checkLevelCompletion() {
     }
 
     @FXML
-    private void resetButton(ActionEvent event) {
+    private void resetButton(ActionEvent event) throws URISyntaxException {
         repetition.clear();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Reset Level Confirmation");
@@ -546,14 +562,15 @@ private void checkLevelCompletion() {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                loadBoard("levels/level" + level + ".txt");
-                while (!boxesOnGoals.isEmpty()) { 
+                loadBoard("levels/level" + level + ".txt", false);
+                while (!boxesOnGoals.isEmpty()) {
                     boxesOnGoals.pop();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
@@ -570,6 +587,7 @@ private void checkLevelCompletion() {
             Scene currentScene = ((Node) event.getSource()).getScene();
             currentScene.setRoot(startMenuView);
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
@@ -582,66 +600,40 @@ private void checkLevelCompletion() {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Platform.exit();
         }
+        BoardGame.requestFocus();
     }
 
     @FXML
     private void helpButton(ActionEvent event) {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpView.fxml"));
             Parent helpView = loader.load();
 
-            
             Scene scene = new Scene(helpView);
 
-            
             Stage stage = new Stage();
             stage.setTitle("Help");
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             stage.setResizable(false);
             stage.setScene(scene);
 
-            
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); 
+            BoardGame.requestFocus();
         });
-    }
-
-    private void showAlert(String message) {
-        try {
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
-            Parent root = loader.load();
-
-            
-            AlertDialogController controller = loader.getController();
-            controller.setMessage(message); 
-
-            
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("MESSAGE");
-            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-            stage.setResizable(false);
-            stage.initModality(Modality.NONE); 
-            stage.showAndWait(); 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void goToMenu(Stage currentStage) {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
             Parent root = loader.load();
 
-            
             Stage newStage = new Stage();
             newStage.setScene(new Scene(root));
             newStage.setTitle("Menu");
@@ -650,7 +642,6 @@ private void checkLevelCompletion() {
             newStage.initModality(Modality.NONE);
             newStage.show();
 
-            
             currentStage.close();
 
         } catch (IOException e) {
@@ -658,4 +649,25 @@ private void checkLevelCompletion() {
         }
     }
 
+    
+        private void showAlert(String message) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
+            Parent root = loader.load();
+
+            AlertDialogController controller = loader.getController();
+            controller.setMessage(message);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("MESSAGE");
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

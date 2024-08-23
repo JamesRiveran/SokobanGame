@@ -18,10 +18,6 @@ import javafx.fxml.Initializable;
 public class ChooseLevelViewController implements Initializable {
 
     private StartMenuViewController startMenuController;
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         

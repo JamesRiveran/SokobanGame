@@ -1,10 +1,7 @@
-/*
- * Click nbfs:
- * Click nbfs:
- */
 package com.mycompany.sokovangame;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -15,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -30,27 +28,30 @@ public class NextLevelViewController implements Initializable {
     private int characterNumber;
     private String itemName;
     private String playerName;
+    private String message;
     private int level;
     private int movesCount;
     private Queue<Integer> repetition = new ArrayDeque<>();
     int initialPlayerPosX;
     int initialPlayerPosY;
-    int nextLevel;
     @FXML
-    private Label txt;
-
-    /**
-     * Initializes the controller class.
-     */
+    private Label txtMessage;
+    @FXML
+    private Button btnGoNextLevel;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Inicialización
+    }
 
+    public void setMessage(String messageText, String messageButton) {
+        txtMessage.setText(messageText);
+        btnGoNextLevel.setText(messageButton);
     }
 
     @FXML
-    private void reviewButton(ActionEvent event) {
+    private void reviewButton(ActionEvent event) throws URISyntaxException {
         try {
-
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
@@ -65,6 +66,8 @@ public class NextLevelViewController implements Initializable {
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
             gameStage.initModality(Modality.NONE);
+            
+            currentStage.close();
             gameStage.show();
 
         } catch (IOException e) {
@@ -81,13 +84,15 @@ public class NextLevelViewController implements Initializable {
         this.repetition = repetition;
         this.initialPlayerPosX = initialPlayerPosX;
         this.initialPlayerPosY = initialPlayerPosY;
-
     }
 
-    @FXML
-    private void goNextLevelButton(ActionEvent event) throws IOException {
+
+     @FXML
+
+    private void goNextLevelButton(ActionEvent event) throws IOException, URISyntaxException {
 
         if (level < 5) {
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
@@ -102,10 +107,10 @@ public class NextLevelViewController implements Initializable {
             gameStage.initModality(Modality.NONE);
             gameStage.show();
 
-            Stage currentStage = (Stage) txt.getScene().getWindow();
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
             currentStage.close();
         } else {
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
             Parent gameView = loader.load();
 
             StartMenuViewController controller = loader.getController();
@@ -119,7 +124,7 @@ public class NextLevelViewController implements Initializable {
             gameStage.initModality(Modality.NONE);
             gameStage.show();
 
-            Stage currentStage = (Stage) txt.getScene().getWindow();
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
             currentStage.close();  
         }
     }

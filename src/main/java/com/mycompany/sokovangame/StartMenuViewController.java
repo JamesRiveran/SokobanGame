@@ -115,7 +115,6 @@ public class StartMenuViewController implements Initializable {
 
     public void setCharacter(String characterName, int characterNumber) {
         this.characterNumber = characterNumber;
-        System.out.println(characterNumber);
         String imagePath = "/imagesGame/" + characterName.toLowerCase() + ".png";
         URL imageUrl = getClass().getResource(imagePath);
         if (imageUrl != null) {
@@ -135,7 +134,7 @@ public class StartMenuViewController implements Initializable {
     }
 
     @FXML
-    private void StartGameButton(ActionEvent event) throws IOException {
+    private void StartGameButton(ActionEvent event) throws IOException, URISyntaxException {
         String playerName = txtPlayerName.getText();
         String itemName = txtItemName.getText();
 
@@ -149,7 +148,7 @@ public class StartMenuViewController implements Initializable {
             controller.setItems(characterNumber, itemName, playerName, level);
             Stage gameStage = new Stage();
             gameStage.setTitle("Game");
-            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.setScene(new Scene(gameView, 800, 700));
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
             gameStage.initModality(Modality.NONE);
@@ -183,14 +182,19 @@ public class StartMenuViewController implements Initializable {
     @FXML
     private void AboutButton(ActionEvent event) {
         try {
-            showStartMenu();
+            showStartMenu(); 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AboutUs.fxml"));
             Parent aboutUsView = loader.load();
+
+            AboutUsController aboutUsController = loader.getController();
+            aboutUsController.setStartMenuController(this);
+
             stackPane.getChildren().add(aboutUsView);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void setPlayerName(String playerName) {
         this.txtPlayerName.setText(playerName);
@@ -202,7 +206,6 @@ public class StartMenuViewController implements Initializable {
 
     public void getLevel(int level) {
         this.level = level;
-        System.out.println(level);
     }
 
     @FXML
@@ -220,9 +223,9 @@ public class StartMenuViewController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
-    private void loadGameButton(ActionEvent event) {
+    private void loadGameButton(ActionEvent event) throws URISyntaxException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Saved Game");
         fileChooser.getExtensionFilters().add(
@@ -243,7 +246,7 @@ public class StartMenuViewController implements Initializable {
         }
     }
 
-    private void loadGameFromFile(File file) {
+    private void loadGameFromFile(File file) throws URISyntaxException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             List<String> mapLines = new ArrayList<>();
             String line;
@@ -260,6 +263,8 @@ public class StartMenuViewController implements Initializable {
 
             String characterNumberLine = reader.readLine();
             int characterNumber = Integer.parseInt(characterNumberLine.split(": ")[1].trim());
+            
+            
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();

@@ -32,7 +32,7 @@
     -fx-background-color: #CC6666; /* Rojo en estado pressed */
 }
 .logo{
-    -fx-background-image: url("../images/r.png");
+    -fx-background-image: url("../imagesGame/steve.png");
     -fx-background-size: 100% 100%;
     -fx-opacity: 0.98;
 }
