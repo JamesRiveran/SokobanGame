@@ -62,7 +62,7 @@ public class NextLevelViewController implements Initializable {
 
             Stage gameStage = new Stage();
             gameStage.setTitle("Game");
-            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.setScene(new Scene(gameView, 800, 700));
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
             gameStage.initModality(Modality.NONE);
@@ -101,7 +101,7 @@ public class NextLevelViewController implements Initializable {
 
             Stage gameStage = new Stage();
             gameStage.setTitle("Game");
-            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.setScene(new Scene(gameView, 800, 700));
             gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             gameStage.setResizable(true);
             gameStage.initModality(Modality.NONE);

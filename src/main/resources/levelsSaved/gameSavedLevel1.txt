@@ -1,53 +1,19 @@
-######
-#    #####
-<<<<<<< HEAD
-<<<<<<< HEAD
-# $  $   #
+##########
+# @  #####
+# $$     #
 #        #
-#.   @ . #
+#.     ! #
 #        #
-# $    $ #
+# $      #
 #.  .    #
 #####    #
-    ######
+##########
 
-Player Name: d
-Game Name: d
+Player Name: a
+Game Name: s
 Level: 1
 Character Number: 5
-Boxes on Goals: 0
-Repetition: -1 0 -1 0 -1 0 
-=======
-#$@      #
-#        #
-#.     ! #
-#        #
-#        #
-#!  !    #
-#####    #
-    ######
-
-Player Name: asd
-Game Name: asd
-Level: 1
-Character Number: 5
-Boxes on Goals: 3
-Repetition: 0 1 0 1 -1 0 -1 0 0 -1 -1 0 -1 0 -1 0 0 -1 1 0 0 -1 0 -1 -1 0 -1 0 0 1 1 0 1 0 1 0 1 0 1 0 0 -1 0 -1 -1 0 0 -1 1 0 0 1 -1 0 -1 0 -1 0 0 1 -1 0 0 -1 
+Boxes on Goals: 1
+Repetition: 0 1 0 1 -1 0 -1 0 0 -1 -1 0 -1 0 -1 0 0 -1 0 -1 1 0 -1 0 -1 0 0 -1 0 -1 
 Initial position: 7,5
-Moves Count: 33
->>>>>>> fixes
-=======
-# $      #
-#        #
-#.     ! #
-#        #
-#@       #
-#!  !    #
-#####    #
-    ######
-
-Player Name: asd
-Game Name: asd
-Level: 1
-Character Number: 5
->>>>>>> origin/windowFixes
+Moves Count: 16
