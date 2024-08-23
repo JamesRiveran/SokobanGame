@@ -84,7 +84,9 @@ public class NextLevelViewController implements Initializable {
         this.initialPlayerPosY = initialPlayerPosY;
     }
 
+
      @FXML
+
     private void goNextLevelButton(ActionEvent event) throws IOException, URISyntaxException {
 
         if (level < 5) {

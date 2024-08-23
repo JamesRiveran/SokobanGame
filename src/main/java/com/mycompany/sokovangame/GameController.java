@@ -88,8 +88,6 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
             BoardGame.requestFocus();
         });
-
-       // setItems(3,"ddh", "sg",  4);//debu
     }
 
     public void setItems(int characterNumber, String GameName, String PlayerName, int level) throws URISyntaxException {
@@ -98,7 +96,7 @@ public class GameController implements Initializable {
         this.PlayerName = PlayerName;
         this.level = level;
         try {
-            loadBoard("levels/level" + level + ".txt");
+            loadBoard("levels/level" + level + ".txt", false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +115,7 @@ public class GameController implements Initializable {
         this.PlayerName = PlayerName;
         this.level = level;
         try {
-            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt");
+            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -144,7 +142,7 @@ public class GameController implements Initializable {
         reverseTypeMap.put(4, '!');
     }
 
-    private void loadBoard(String resourcePath) throws IOException, URISyntaxException {
+    private void loadBoard(String resourcePath, Boolean isSaved) throws IOException, URISyntaxException {
         BoardGame.getChildren().clear();
         gameMatrix.clear();
 
@@ -202,8 +200,18 @@ public class GameController implements Initializable {
                         repetition.add(Integer.parseInt(move));
                     }
                 }
+                if (line.startsWith("Initial position: ") && isSaved) {
+                    String[] positions = line.split(": ")[1].trim().split(",");
+                    int savedPlayerPosX = Integer.parseInt(positions[0].trim());
+                    int savedPlayerPosY = Integer.parseInt(positions[1].trim());
+                    initialPlayerPosX = savedPlayerPosX;
+                    initialPlayerPosY = savedPlayerPosY;
+                    System.out.println(initialPlayerPosX + "asdasd" + initialPlayerPosY);
+                }
+                if (line.startsWith("Moves Count: ") && isSaved) {
+                movesCount = Integer.parseInt(line.split(": ")[1].trim());
+                }
             }
-
             updatePlayerPosition();
             checkLevelCompletion(messageText, messageButton);
             BoardGame.requestFocus();
@@ -311,7 +319,8 @@ public class GameController implements Initializable {
         int newCordY = playerPosY + directionY;
         int newItemCordX = playerPosX + directionX;
         int newItemCordY = playerPosY + directionY;
-
+        int BoxCordX = playerPosX + directionX * 2;
+        int BoxCordY = playerPosY + directionY * 2;
         registerPlayerMove(directionX, directionY);
 
         if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 2 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
@@ -415,7 +424,6 @@ public class GameController implements Initializable {
             getListSquare(initialGoalX, initialGoalY).setType(2);
             band = false;
         }
-
     }
     
     private boolean isLevelCompleted(int currentLevel) {
@@ -440,7 +448,6 @@ public class GameController implements Initializable {
                     controller.setMessage("You passed all levels", "GO TO MENU");
                 }
                 controller.setItems(characterNumber, GameName, PlayerName, level, movesCount, repetition, initialPlayerPosX, initialPlayerPosY, level);
-
                 Stage nextLevelStage = new Stage();
                 nextLevelStage.setTitle("Next Level");
                 nextLevelStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
@@ -523,6 +530,10 @@ public class GameController implements Initializable {
                 for (Integer move : repetition) {
                     writer.write(move + " ");
                 }
+                writer.newLine();
+                writer.write("Initial position: " + initialPlayerPosX + "," + initialPlayerPosY);
+                writer.newLine();
+                writer.write("Moves Count: " + movesCount);
                 writer.flush();
                 showAlert("Your game has been saved successfully!");
             }
@@ -548,7 +559,7 @@ public class GameController implements Initializable {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                loadBoard("levels/level" + level + ".txt");
+                loadBoard("levels/level" + level + ".txt", false);
                 while (!boxesOnGoals.isEmpty()) {
                     boxesOnGoals.pop();
                 }
@@ -631,6 +642,7 @@ public class GameController implements Initializable {
             e.printStackTrace();
         }
     }
+
     
         private void showAlert(String message) {
         try {

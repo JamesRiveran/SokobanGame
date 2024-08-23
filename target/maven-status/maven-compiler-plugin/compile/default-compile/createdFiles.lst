@@ -6,4 +6,7 @@ model\Square.class
 com\mycompany\sokovangame\ChooseCharacterViewController.class
 com\mycompany\sokovangame\ChooseLevelViewController.class
 module-info.class
+com\mycompany\sokovangame\App.class
+com\mycompany\sokovangame\GameController$1.class
+com\mycompany\sokovangame\GameController.class
 com\mycompany\sokovangame\AlertDialogController.class
