@@ -123,6 +123,7 @@ public class GameController implements Initializable {
         this.GameName = GameName;
         this.PlayerName = PlayerName;
         this.level = level;
+        
         try {
             loadBoard("levelsSaved/gameSavedLevel" + level + ".txt");
         } catch (IOException e) {

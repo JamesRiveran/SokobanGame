@@ -260,6 +260,8 @@ public class StartMenuViewController implements Initializable {
 
             String characterNumberLine = reader.readLine();
             int characterNumber = Integer.parseInt(characterNumberLine.split(": ")[1].trim());
+            
+            
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
