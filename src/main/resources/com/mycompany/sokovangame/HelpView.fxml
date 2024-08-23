@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.mycompany.sokovangame.HelpViewController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.HelpViewController">
     <stylesheets>
         <URL value="@/styles/helpview.css" />
     </stylesheets>
@@ -23,9 +23,9 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="542.0" styleClass="text2" text="The objective of the game is to push the boxes (or balls) to their correct place within a small" />
-                        <Label alignment="CENTER" styleClass="text2" text="warehouse, with the minimum number of pushes and steps. Boxes can only be pushed," />
-                        <Label alignment="CENTER" styleClass="text2" text="not pulled, and only one box can be pushed at a time." />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="542.0" styleClass="text2" text="The objective of the game is to push the boxes (or balls) to their correct place within" />
+                        <Label alignment="CENTER" styleClass="text2" text="a small warehouse, with the minimum number of pushes and steps." />
+                        <Label alignment="CENTER" styleClass="text2" text=" Boxes can only be pushed, not pulled, and only one box can be pushed at a time." />
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                            <children>
                               <Label styleClass="text2" text="In this game you will be able to observe the following elements:" />
@@ -67,7 +67,7 @@
                   </VBox>
                </children>
                <VBox.margin>
-                  <Insets bottom="29.0" left="29.0" right="29.0" top="29.0" />
+                  <Insets bottom="54.0" left="54.0" right="54.0" top="54.0" />
                </VBox.margin>
             </VBox>
          </children>

@@ -8,24 +8,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="backgroundMain" stylesheets="@../../../styles/nextlevelview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.NextLevelViewController">
+<AnchorPane id="AnchorPane" prefHeight="465.0" prefWidth="600.0" styleClass="backgroundMain" stylesheets="@../../../styles/nextlevelview.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.NextLevelViewController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #744E3B;" VBox.vgrow="ALWAYS">
                <children>
-                  <Label fx:id="txt" />
-                  <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="421.0" styleClass="text1" text="Congratulations" />
+                  <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="421.0" styleClass="text1" text="Congratulations">
+                     <VBox.margin>
+                        <Insets top="23.0" />
+                     </VBox.margin>
+                  </Label>
                   <Label fx:id="txtMessage" alignment="CENTER" prefHeight="27.0" prefWidth="358.0" styleClass="text2" textFill="WHITE">
                      <font>
                         <Font size="22.0" />
-                     </font></Label>
-                  <Label styleClass="text2" text="which option you want to do" />
+                     </font>
+                  </Label>
+                  <Label styleClass="text3" text="which option you want to do">
+                     <VBox.margin>
+                        <Insets bottom="12.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
                <VBox.margin>
-                  <Insets left="71.0" right="71.0" top="71.0" />
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
                </VBox.margin>
             </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
             <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -51,6 +60,11 @@
                      </children>
                   </HBox>
                </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </VBox>
          </children>
       </VBox>

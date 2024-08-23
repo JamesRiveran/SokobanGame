@@ -25,10 +25,6 @@ public class AlertDialogController implements Initializable {
     private Label lblAbvertens;
     @FXML
     private Label txtTexts;
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

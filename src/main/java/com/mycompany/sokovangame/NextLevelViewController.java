@@ -1,6 +1,7 @@
 package com.mycompany.sokovangame;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -37,43 +38,25 @@ public class NextLevelViewController implements Initializable {
     private Label txtMessage;
     @FXML
     private Button btnGoNextLevel;
-    @FXML
-    private Label txt;
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Inicialización
     }
 
-    public void setMessage(String messageText,String messageButton) {
-        System.out.println(messageText);
-        System.out.println(messageButton);
+    public void setMessage(String messageText, String messageButton) {
         txtMessage.setText(messageText);
         btnGoNextLevel.setText(messageButton);
     }
 
-    public void setItems(int characterNumber, String GameName, String PlayerName, int level, int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY, int nextLevel) {
-        this.characterNumber = characterNumber;
-        this.itemName = GameName;
-        this.playerName = PlayerName;
-        this.level = level;
-        this.movesCount = movesCount;
-        this.repetition = repetition;
-        this.initialPlayerPosX = initialPlayerPosX;
-        this.initialPlayerPosY = initialPlayerPosY;
-        this.message = message;
-    }
-
     @FXML
-    private void reviewButton(ActionEvent event) {
+    private void reviewButton(ActionEvent event) throws URISyntaxException {
         try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
             Parent gameView = loader.load();
 
             GameController controller = loader.getController();
+
             controller.setItems(characterNumber, itemName, playerName, level);
             controller.playRepetition(movesCount, repetition, initialPlayerPosX, initialPlayerPosY);
 
@@ -85,48 +68,60 @@ public class NextLevelViewController implements Initializable {
             gameStage.initModality(Modality.NONE);
             gameStage.show();
 
-            // Cerrar la ventana actual
-            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
-            currentStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-@FXML
-private void goNextLevelButton(ActionEvent event) {
-    try {
-        FXMLLoader loader;
-        Parent view;
+    public void setItems(int characterNumber, String GameName, String PlayerName, int level, int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY, int nextLevel) {
+        this.characterNumber = characterNumber;
+        this.itemName = GameName;
+        this.playerName = PlayerName;
+        this.level = level;
+        this.movesCount = movesCount;
+        this.repetition = repetition;
+        this.initialPlayerPosX = initialPlayerPosX;
+        this.initialPlayerPosY = initialPlayerPosY;
+    }
+
+     @FXML
+    private void goNextLevelButton(ActionEvent event) throws IOException, URISyntaxException {
 
         if (level < 5) {
-            loader = new FXMLLoader(getClass().getResource("Game.fxml"));
-            view = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            Parent gameView = loader.load();
 
             GameController controller = loader.getController();
             controller.setItems(characterNumber, itemName, playerName, level + 1);
 
+            Stage gameStage = new Stage();
+            gameStage.setTitle("Game");
+            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            gameStage.setResizable(true);
+            gameStage.initModality(Modality.NONE);
+            gameStage.show();
+
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
+            currentStage.close();
         } else {
-            loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
-            view = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
+            Parent gameView = loader.load();
+
+            StartMenuViewController controller = loader.getController();
+
+
+            Stage gameStage = new Stage();
+            gameStage.setTitle("Menu");
+            gameStage.setScene(new Scene(gameView, 800, 600));
+            gameStage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
+            gameStage.setResizable(true);
+            gameStage.initModality(Modality.NONE);
+            gameStage.show();
+
+            Stage currentStage = (Stage) txtMessage.getScene().getWindow();
+            currentStage.close();  
         }
-
-        Stage stage = new Stage();
-        stage.setTitle("Game");
-        stage.setScene(new Scene(view, 800, 600));
-        stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
-        stage.setResizable(true);
-        stage.initModality(Modality.NONE);
-        stage.show();
-
-        // Cerrar la ventana actual
-        Stage currentStage = (Stage) txtMessage.getScene().getWindow();
-        currentStage.close();
-
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-}
-
 
 }

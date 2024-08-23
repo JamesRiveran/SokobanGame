@@ -1,15 +1,17 @@
 ######
 #    #####
-#    $   #
+# $  $   #
 #        #
-#! @   ! #
+#.   @ . #
 #        #
-#        #
-#!  .    #
+# $    $ #
+#.  .    #
 #####    #
     ######
 
-Player Name: ads
-Game Name: sad
+Player Name: d
+Game Name: d
 Level: 1
-Character Number: 8
+Character Number: 5
+Boxes on Goals: 0
+Repetition: -1 0 -1 0 -1 0 
