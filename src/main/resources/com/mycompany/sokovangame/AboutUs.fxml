@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="626.0" stylesheets="@../../../styles/aboutUs.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.AboutUsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="626.0" stylesheets="@../../../styles/aboutUs.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.sokovangame.AboutUsController">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="624.0" style="-fx-background-color: #744E3B;">
          <center>
@@ -84,11 +85,19 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="Thank you for playing our version of Sokoban!">
                            <VBox.margin>
-                              <Insets bottom="20.0" />
+                              <Insets top="10.0" />
                            </VBox.margin>
                         </Text>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="To report bugs or send feedback:" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="james.rivera.nunez@gmail.com" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="contact" text="james.rivera.nunez@gmail.com">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin></Text>
+                        <Button mnemonicParsing="false" onAction="#returnToStartMenu" styleClass="return-button" text="Back to Start">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                      <HBox.margin>
                         <Insets left="30.0" />
@@ -101,9 +110,9 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="James Rivera Núñez" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="Marco Fallas Umaña" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="developer-name" text="Raquel Vargas Arias" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="James Rivera Núñez" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="Marco Fallas Umaña" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="thank-you" text="Raquel Vargas Arias" />
                      </children>
                   </VBox>
                </children>
