@@ -1,6 +1,6 @@
 ######
-#@   #####
-#$       #
+#    #####
+#$@      #
 #        #
 #.     ! #
 #        #
@@ -9,9 +9,11 @@
 #####    #
     ######
 
-Player Name: sad
-Game Name: sa
+Player Name: asd
+Game Name: asd
 Level: 1
-Character Number: 8
+Character Number: 5
 Boxes on Goals: 3
-Repetition: 0 1 0 1 -1 0 -1 0 0 -1 -1 0 -1 0 -1 0 0 -1 1 0 0 -1 0 -1 -1 0 -1 0 0 1 1 0 1 0 1 0 1 0 1 0 0 -1 0 -1 -1 0 0 -1 1 0 0 1 0 1 -1 0 0 1 -1 0 -1 0 -1 0 0 -1 0 -1 -1 0 0 -1 
+Repetition: 0 1 0 1 -1 0 -1 0 0 -1 -1 0 -1 0 -1 0 0 -1 1 0 0 -1 0 -1 -1 0 -1 0 0 1 1 0 1 0 1 0 1 0 1 0 0 -1 0 -1 -1 0 0 -1 1 0 0 1 -1 0 -1 0 -1 0 0 1 -1 0 0 -1 
+Initial position: 7,5
+Moves Count: 33

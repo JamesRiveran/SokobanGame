@@ -74,7 +74,6 @@ public class GameController implements Initializable {
     private int movesCount = 1;
     private List<List<Square>> backupMatrix = new ArrayList<>();
 
-
     @FXML
     private GridPane BoardGame;
     private List<List<Square>> gameMatrix = new ArrayList<>();
@@ -94,7 +93,7 @@ public class GameController implements Initializable {
         setupControls();
 
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); 
+            BoardGame.requestFocus();
         });
 
         //setItems(5, "asd", "asdasd", 5);//debu
@@ -106,7 +105,7 @@ public class GameController implements Initializable {
         this.PlayerName = PlayerName;
         this.level = level;
         try {
-            loadBoard("levels/level" + level + ".txt");
+            loadBoard("levels/level" + level + ".txt", false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,14 +124,12 @@ public class GameController implements Initializable {
         this.PlayerName = PlayerName;
         this.level = level;
         try {
-            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt");
+            loadBoard("levelsSaved/gameSavedLevel" + level + ".txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        
         updatePlayerPosition();
-        
 
     }
 
@@ -154,7 +151,7 @@ public class GameController implements Initializable {
         reverseTypeMap.put(4, '!');
     }
 
-   private void loadBoard(String resourcePath) throws IOException, URISyntaxException {
+    private void loadBoard(String resourcePath, Boolean isSaved) throws IOException, URISyntaxException {
         BoardGame.getChildren().clear();
         gameMatrix.clear();
 
@@ -187,6 +184,9 @@ public class GameController implements Initializable {
                         type = characterNumber;
                         initialPlayerPosX = row;
                         initialPlayerPosY = col;
+                        if (isSaved) {
+
+                        }
                     }
                     Square square = new Square(type);
                     rowList.add(square);
@@ -205,13 +205,23 @@ public class GameController implements Initializable {
                     for (int i = 0; i < boxesOnGoalsCount; i++) {
                         boxesOnGoals.push(new int[]{0, 0});
                     }
-                }
-                else if (line.startsWith("Repetition: ")) {
+                } else if (line.startsWith("Repetition: ")) {
                     repetition.clear();
                     String[] moves = line.substring(12).trim().split(" ");
                     for (String move : moves) {
                         repetition.add(Integer.parseInt(move));
                     }
+                }
+                if (line.startsWith("Initial position: ") && isSaved) {
+                    String[] positions = line.split(": ")[1].trim().split(",");
+                    int savedPlayerPosX = Integer.parseInt(positions[0].trim());
+                    int savedPlayerPosY = Integer.parseInt(positions[1].trim());
+                    initialPlayerPosX = savedPlayerPosX;
+                    initialPlayerPosY = savedPlayerPosY;
+                    System.out.println(initialPlayerPosX + "asdasd" + initialPlayerPosY);
+                }
+                if (line.startsWith("Moves Count: ") && isSaved) {
+                movesCount = Integer.parseInt(line.split(": ")[1].trim());
                 }
             }
 
@@ -237,7 +247,7 @@ public class GameController implements Initializable {
 
         BoardGame.setFocusTraversable(true);
         BoardGame.setOnKeyPressed(this::keyControls);
-        BoardGame.requestFocus(); 
+        BoardGame.requestFocus();
 
     }
 
@@ -252,20 +262,17 @@ public class GameController implements Initializable {
 
     }
 
-  
     public void playRepetition(int movesCount, Queue<Integer> repetition, int initialPlayerPosX, int initialPlayerPosY) throws IOException {
         this.movesCount = movesCount;
-        this.repetition=repetition;
-        this.initialPlayerPosX = initialPlayerPosX; 
+        this.repetition = repetition;
+        this.initialPlayerPosX = initialPlayerPosX;
         this.initialPlayerPosY = initialPlayerPosY;
-        if(repetition.isEmpty())
-            
-        
-        
-        if (playerPosX > 0 && playerPosY > 0) {
-            
-            playerPosX = initialPlayerPosX;
-            playerPosY = initialPlayerPosY;
+        if (repetition.isEmpty()) {
+            if (playerPosX > 0 && playerPosY > 0) {
+
+                playerPosX = initialPlayerPosX;
+                playerPosY = initialPlayerPosY;
+            }
         }
 
         getListSquare(playerPosX, playerPosY).setType(0);
@@ -279,21 +286,20 @@ public class GameController implements Initializable {
         pause.setOnFinished(event -> {
             this.movesCount--;
             if (this.movesCount == 0) {
-                
+
                 pause.stop();
                 this.movesCount += 1;
                 BoardGame.requestFocus();
                 restoreBoard();
 
             } else {
-                
+
                 setPlayerPosition(playerPosX + repetition.poll(), playerPosY + repetition.poll());
                 pause.playFromStart();
             }
         });
         pause.play();
     }
-
 
     private void restoreBoard() {
         gameMatrix.clear();
@@ -319,7 +325,7 @@ public class GameController implements Initializable {
         repetition.add(directionY);
     }
 
-  public void setPlayerPosition(int x, int y) {
+    public void setPlayerPosition(int x, int y) {
         int directionX = x - playerPosX;
         int directionY = y - playerPosY;
         int newCordX = playerPosX + directionX;
@@ -328,7 +334,7 @@ public class GameController implements Initializable {
         int newItemCordY = playerPosY + directionY;
         int BoxCordX = playerPosX + directionX * 2;
         int BoxCordY = playerPosY + directionY * 2;
-        
+
         registerPlayerMove(directionX, directionY);
 
         if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && getListSquare(newCordX, newCordY).getType() != 2 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
@@ -336,9 +342,9 @@ public class GameController implements Initializable {
             playerPosX = x;
             playerPosY = y;
             updatePlayerPosition();
-         
+
             restoreItem(initialGoalX, initialGoalY, directionX, directionY);
-           
+
         } else if (isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 3 && getListSquare(newCordX, newCordY).getType() != 4 && isValidPosition(x, y) && getListSquare(newCordX, newCordY).getType() != 1 && isMoveBox(newCordX, newCordY, directionX, directionY)) {
             getListSquare(playerPosX, playerPosY).setType(0);
             playerPosX = x;
@@ -366,8 +372,6 @@ public class GameController implements Initializable {
         }
         checkLevelCompletion();
     }
-
-
 
     private boolean isMoveBox(int newCordX, int newCordY, int directionX, int directionY) {
         int newBoxCordX = playerPosX + directionX * 2;
@@ -436,12 +440,12 @@ public class GameController implements Initializable {
             getListSquare(initialGoalX, initialGoalY).setType(2);
             band = false;
         }
-        
+
     }
 
     private boolean isLevelCompleted(int currentLevel) {
         int totalGoals = levelGoals.getOrDefault(currentLevel, 0);
-     
+
         return boxesOnGoals.size() == totalGoals;
     }
 
@@ -470,8 +474,6 @@ public class GameController implements Initializable {
         }
     }
 
-
-
     private boolean isValidPosition(int x, int y) {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
     }
@@ -497,7 +499,7 @@ public class GameController implements Initializable {
         }
     }
 
-   @FXML
+    @FXML
     private void saveGameButton(ActionEvent event) {
         try {
             Path resourceRoot = Paths.get(getClass().getClassLoader().getResource("").toURI()).getParent().getParent();
@@ -540,6 +542,10 @@ public class GameController implements Initializable {
                 for (Integer move : repetition) {
                     writer.write(move + " ");
                 }
+                writer.newLine();
+                writer.write("Initial position: " + initialPlayerPosX + "," + initialPlayerPosY);
+                writer.newLine();
+                writer.write("Moves Count: " + movesCount);
                 writer.flush();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Game Saved");
@@ -557,8 +563,6 @@ public class GameController implements Initializable {
         }
     }
 
-
-
     @FXML
     private void resetButton(ActionEvent event) throws URISyntaxException {
         repetition.clear();
@@ -571,8 +575,8 @@ public class GameController implements Initializable {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                loadBoard("levels/level" + level + ".txt");
-                while (!boxesOnGoals.isEmpty()) { 
+                loadBoard("levels/level" + level + ".txt", false);
+                while (!boxesOnGoals.isEmpty()) {
                     boxesOnGoals.pop();
                 }
             } catch (IOException e) {
@@ -612,49 +616,44 @@ public class GameController implements Initializable {
     @FXML
     private void helpButton(ActionEvent event) {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpView.fxml"));
             Parent helpView = loader.load();
 
-            
             Scene scene = new Scene(helpView);
 
-            
             Stage stage = new Stage();
             stage.setTitle("Help");
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             stage.setResizable(false);
             stage.setScene(scene);
 
-            
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         Platform.runLater(() -> {
-            BoardGame.requestFocus(); 
+            BoardGame.requestFocus();
         });
     }
 
     private void showAlert(String message) {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
             Parent root = loader.load();
 
-            
             AlertDialogController controller = loader.getController();
-            controller.setMessage(message); 
+            controller.setMessage(message);
 
-            
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("MESSAGE");
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/imagesGame/steve.png")));
             stage.setResizable(false);
-            stage.initModality(Modality.NONE); 
-            stage.showAndWait(); 
+            stage.initModality(Modality.NONE);
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -662,11 +661,10 @@ public class GameController implements Initializable {
 
     private void goToMenu(Stage currentStage) {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("StartMenuView.fxml"));
             Parent root = loader.load();
 
-            
             Stage newStage = new Stage();
             newStage.setScene(new Scene(root));
             newStage.setTitle("Menu");
@@ -675,7 +673,6 @@ public class GameController implements Initializable {
             newStage.initModality(Modality.NONE);
             newStage.show();
 
-            
             currentStage.close();
 
         } catch (IOException e) {
