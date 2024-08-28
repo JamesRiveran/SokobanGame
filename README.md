@@ -43,7 +43,7 @@ Este proyecto es una implementación del clásico rompecabezas Sokoban, desarrol
 <details>
 <summary>📊 Estado del Proyecto</summary>
 
-🚧 En desarrollo 🚧
+✔️ Completado ✔️
 
 </details>
 
